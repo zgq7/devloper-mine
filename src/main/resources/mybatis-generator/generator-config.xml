@@ -9,7 +9,8 @@
     <classPathEntry
             location="D:\IntelljIdea\Maven3.5\localmaven\mysql\mysql-connector-java\8.0.16\mysql-connector-java-8.0.16.jar"/>
 
-    <context id="DB2Tables" targetRuntime="MyBatis3">
+    <!-- MyBatis3Simple 不生成example的问题-->
+    <context id="DB2Tables" targetRuntime="MyBatis3Simple" defaultModelType="flat">
         <!-- TKmybatis配置 -->
         <property name="javaFileEncoding" value="UTF-8"/>
         <property name="beginningDelimiter" value="`"/>
@@ -29,23 +30,27 @@
                         connectionURL="${jdbc.url}"
                         userId="${jdbc.username}"
                         password="${jdbc.password}">
+
+            <!-- mysql 驱动8.x版本需要设置时区 value设置为GMT、UTC都可以 -->
+            <property name="serverTimezone" value="GMT"/>
+
+            <!-- 解决生成其他数据库的表的model和mapper等 -->
+            <!-- 也可解决生成的model里面缺少@Id注解问题（此问题mysql驱动版本回退到5.1也可以解决）-->
+            <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="${targetModelPackage}" targetProject="${targetJavaProject}">
-
-        </javaModelGenerator>
+        <javaModelGenerator targetPackage="${targetModelPackage}" targetProject="${targetJavaProject}"/>
 
         <sqlMapGenerator targetPackage="${targetXMLPackage}" targetProject="${targetResourcesProject}"/>
-
         <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}"
                              type="XMLMAPPER"/>
 
-        <!--tableName 代表表名 domainObjectName代表实体名 -->
-        <table tableName="a_opi" schema="Mysql" domainObjectName="aopi">
+        <!--tableName 代表表名 domainObjectName代表实体名 schema指数据库结构-->
+        <table tableName="aopi">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
