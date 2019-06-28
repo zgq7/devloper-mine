@@ -50,7 +50,7 @@
                              type="XMLMAPPER"/>
 
         <!--tableName 代表表名 domainObjectName代表实体名 schema指数据库结构-->
-        <table tableName="aopi">
+        <table tableName="aopi" schema="Mysql">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

@@ -26,7 +26,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志输出文件名定义 -->
-            <fileNamePattern>./logBack/info.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>./logBack/info/info.log.%d{yyyy-MM-dd}</fileNamePattern>
             <!-- 文件保留天数 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
