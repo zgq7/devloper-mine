@@ -73,4 +73,21 @@ public class Aopi {
     public void setAge(Integer age) {
         this.age = age;
     }
+
+    public Aopi(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Aopi() {
+    }
+
+    @Override
+    public String toString() {
+        return "Aopi{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }

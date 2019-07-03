@@ -26,7 +26,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志输出文件名定义 -->
-            <fileNamePattern>./logBack/info/info.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>./logBack/info/%d{yyyy-MM-dd}_info.log</fileNamePattern>
             <!-- 文件保留天数 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
@@ -51,7 +51,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志输出文件名定义 -->
-            <fileNamePattern>./logBack/warn.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>./logBack/warn/%d{yyyy-MM-dd}_warn.log</fileNamePattern>
             <!-- 文件保留天数 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
@@ -72,7 +72,28 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志输出文件名定义 -->
-            <fileNamePattern>./logBack/error.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>./logBack/error/%d{yyyy-MM-dd}_error.log</fileNamePattern>
+            <!-- 文件保留天数 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!--error 级别的日志-->
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%-5level) %green([ %thread ]) %boldMagenta(%-50logger ->%5L) ： %cyan(%msg) %n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [ %thread ] %-50logger ->%5L ： %msg %n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志输出文件名定义 -->
+            <fileNamePattern>./logBack/debug/%d{yyyy-MM-dd}_debug.log</fileNamePattern>
             <!-- 文件保留天数 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
@@ -84,10 +105,11 @@
     <logger name="ch.qos.logback" level="DEBUG"/>
 
     <root level="INFO">
-        <appender-ref ref="CONSOLE"></appender-ref>
-        <appender-ref ref="INFO"></appender-ref>
-        <appender-ref ref="WARN"></appender-ref>
-        <appender-ref ref="ERROR"></appender-ref>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="WARN"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="DEBUG"/>
     </root>
 </configuration>
 
