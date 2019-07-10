@@ -1,5 +1,7 @@
 package com.dev.utils;
 
+import com.google.common.collect.Maps;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 
@@ -61,16 +63,29 @@ public final class PageModel implements Serializable {
             this.count = count;
         }
 
-        public PageModel orderBy(LinkedHashMap<String, String> orderBy) {
+        public Instance orderBy(LinkedHashMap<String, String> orderBy) {
             this.orderBy = orderBy;
+            return this;
+        }
+
+        /**
+         * 自定义orderBy方法
+         **/
+        public PageModel orderBy(String[] fields, String[] sorts) {
+            LinkedHashMap<String, String> orders = Maps.newLinkedHashMap();
+            if (fields.length != sorts.length) {
+                return null;
+            }
+            for (int i = 0; i < fields.length; i++) {
+                orders.put(fields[i], sorts[i]);
+            }
+            this.orderBy = orders;
             return new PageModel(this);
         }
 
-/*        public PageModel orderBy(String[] fields,String[] sorts){
-
-        }*/
-
         public PageModel newPageModel() {
+            if (this.orderBy.size() == 0)
+                this.orderBy = null;
             return new PageModel(this);
         }
 

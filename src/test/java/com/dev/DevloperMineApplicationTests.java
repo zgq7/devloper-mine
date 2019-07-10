@@ -7,6 +7,7 @@ import com.dev.utils.PageModel;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -55,6 +57,9 @@ public class DevloperMineApplicationTests {
 
         aopiList.addAll(Arrays.asList(aopi, aop2, aop3, aop4));
 
+        int count = aopiMapper.updateByPrimaryKey(aopi);
+        System.out.println(count);
+
         //第一种方式
         aopiList.forEach(item -> item.setName(item.getName() + "_test"));
         System.out.println(
@@ -82,7 +87,9 @@ public class DevloperMineApplicationTests {
 
     @Test
     public void test02() {
-        PageHelper.startPage(new PageModel.Instance().newPageModel());
+        LinkedHashMap<String, String> orderBy = Maps.newLinkedHashMap();
+        orderBy.put("id", "desc");
+        PageHelper.startPage(new PageModel.Instance().orderBy(orderBy).newPageModel());
         List<Aopi> aopiList = aopiRepositry.selectAll();
         System.out.println(aopiList);
     }
