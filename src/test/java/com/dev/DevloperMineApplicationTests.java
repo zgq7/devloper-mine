@@ -1,7 +1,11 @@
 package com.dev;
 
-import com.dev.mapper.repositry.AopiMapper;
+import com.dev.mapper.mappers.AopiMapper;
+import com.dev.mapper.repositry.AopiRepositry;
 import com.dev.model.Aopi;
+import com.dev.utils.PageModel;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,6 +27,9 @@ public class DevloperMineApplicationTests {
 
     @Autowired
     private AopiMapper aopiMapper;
+
+    @Resource(name = AopiRepositry.PACKAGE_BEAN_NAME)
+    private AopiRepositry aopiRepositry;
 
     @Test
     public void contextLoads() {
@@ -69,6 +76,15 @@ public class DevloperMineApplicationTests {
                 }).get().toString()
         );
 
+        aopiList.stream().peek(item -> System.out.println(123)).collect(Collectors.toList());
+
+    }
+
+    @Test
+    public void test02() {
+        PageHelper.startPage(new PageModel.Instance().newPageModel());
+        List<Aopi> aopiList = aopiRepositry.selectAll();
+        System.out.println(aopiList);
     }
 
 }

@@ -79,9 +79,6 @@ public class Aopi {
         this.age = age;
     }
 
-    public Aopi() {
-    }
-
     @Override
     public String toString() {
         return "Aopi{" +

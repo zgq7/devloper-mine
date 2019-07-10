@@ -1,4 +1,4 @@
-package com.dev.mapper;
+package com.dev.mapper.base;
 
 import org.apache.ibatis.annotations.SelectProvider;
 import tk.mybatis.mapper.common.IdsMapper;
@@ -10,6 +10,8 @@ import tk.mybatis.mapper.common.MySqlMapper;
  * 让生成的mapper文件都集成该接口
  */
 public interface BaseMapper<T> extends Mapper<T>, MySqlMapper<T>, IdsMapper<T> {
+    //TODO
+    //FIXME 该接口不可被扫描到，否则会启动报错
 
 
     @SelectProvider(type = BaseMapperTemplate.class, method = "selectMax")
