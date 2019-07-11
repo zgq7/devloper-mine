@@ -1,5 +1,6 @@
 package com.dev;
 
+import com.dev.mapper.base.BaseRepositry;
 import com.dev.mapper.mappers.AopiMapper;
 import com.dev.mapper.repositry.AopiRepositry;
 import com.dev.model.Aopi;
@@ -89,8 +90,10 @@ public class DevloperMineApplicationTests {
     public void test02() {
         LinkedHashMap<String, String> orderBy = Maps.newLinkedHashMap();
         orderBy.put("id", "desc");
-        //PageHelper.startPage(new PageModel.Instance().orderBy(orderBy).newPageModel());
-        PageHelper.startPage(1, 10, "id");
+        orderBy.put("age", "asc");
+        PageModel pageModel = new PageModel.Instance().orderBy(new String[]{"id", "age"}, new String[]{"desc", "asc"}).newPageModel();
+        PageModel pageModel2 = new PageModel.Instance().orderBy(orderBy).newPageModel();
+        BaseRepositry.parsePageModel(pageModel2);
         List<Aopi> aopiList = aopiRepositry.selectAll();
         System.out.println(aopiList);
     }

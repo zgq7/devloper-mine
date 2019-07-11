@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
  */
 public final class PageModel implements Serializable {
 
-    public PageModel(Instance instance) {
+    private PageModel(Instance instance) {
         this.pageNum = instance.pageNum;
         this.pageSize = instance.pageSize;
         this.count = instance.count;
@@ -27,7 +27,7 @@ public final class PageModel implements Serializable {
 
     private boolean count;
 
-    private final LinkedHashMap orderBy;
+    private final LinkedHashMap<String, String> orderBy;
 
     public static class Instance {
 
@@ -71,16 +71,16 @@ public final class PageModel implements Serializable {
         /**
          * 自定义orderBy方法
          **/
-        public PageModel orderBy(String[] fields, String[] sorts) {
+        public Instance orderBy(String[] fields, String[] sorts) {
             LinkedHashMap<String, String> orders = Maps.newLinkedHashMap();
-            if (fields.length != sorts.length) {
-                return null;
+            if (fields.length != sorts.length || fields.length == 0) {
+                this.orderBy = null;
             }
             for (int i = 0; i < fields.length; i++) {
                 orders.put(fields[i], sorts[i]);
             }
             this.orderBy = orders;
-            return new PageModel(this);
+            return this;
         }
 
         public PageModel newPageModel() {
