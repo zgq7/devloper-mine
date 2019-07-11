@@ -89,7 +89,8 @@ public class DevloperMineApplicationTests {
     public void test02() {
         LinkedHashMap<String, String> orderBy = Maps.newLinkedHashMap();
         orderBy.put("id", "desc");
-        PageHelper.startPage(new PageModel.Instance().orderBy(orderBy).newPageModel());
+        //PageHelper.startPage(new PageModel.Instance().orderBy(orderBy).newPageModel());
+        PageHelper.startPage(1, 10, "id");
         List<Aopi> aopiList = aopiRepositry.selectAll();
         System.out.println(aopiList);
     }

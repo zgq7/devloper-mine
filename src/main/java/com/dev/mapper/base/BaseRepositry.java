@@ -1,7 +1,11 @@
 package com.dev.mapper.base;
 
+import com.dev.utils.PageModel;
+import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -14,5 +18,14 @@ public class BaseRepositry<T> {
 
     public List<T> selectAll() {
         return baseMapper.selectAll();
+    }
+
+    public static void parsePageModel(PageModel pageModel) {
+        LinkedHashMap<String, String> orderBy = pageModel.getOrderBy();
+        List<String> sorts = Lists.newLinkedList();
+        orderBy.forEach((k, v) -> {
+            sorts.add(String.join(k + " " + v));
+        });
+        PageHelper.startPage(pageModel);
     }
 }
