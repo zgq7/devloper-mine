@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.*;
+
 /**
  * Created by zgq7 on 2019/6/6.
+ * 注册一些bean进入ioc
  */
 @Configuration
 public class SpringConfig {
@@ -27,6 +29,11 @@ public class SpringConfig {
         filterFilterRegistrationBean.setOrder(1);
 
         return filterFilterRegistrationBean;
+    }
+
+    @Bean
+    public TestAop testAop() {
+        return new TestAop();
     }
 
 }
