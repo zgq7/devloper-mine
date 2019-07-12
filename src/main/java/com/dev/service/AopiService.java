@@ -1,9 +1,11 @@
 package com.dev.service;
 
 import com.dev.mapper.repositry.AopiRepositry;
+import com.dev.model.Aopi;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by zgq7 on 2019/7/9.
@@ -15,4 +17,9 @@ public class AopiService {
 
     @Resource(name = AopiRepositry.PACKAGE_BEAN_NAME)
     private AopiRepositry aopiRepositry;
+
+    public List<Aopi> getList() {
+        return aopiRepositry.selectAll();
+    }
+
 }

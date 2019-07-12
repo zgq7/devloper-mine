@@ -4,6 +4,7 @@ import com.dev.mapper.base.BaseRepositry;
 import com.dev.mapper.mappers.AopiMapper;
 import com.dev.mapper.repositry.AopiRepositry;
 import com.dev.model.Aopi;
+import com.dev.service.AopiService;
 import com.dev.utils.PageModel;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -33,6 +34,9 @@ public class DevloperMineApplicationTests {
 
     @Resource(name = AopiRepositry.PACKAGE_BEAN_NAME)
     private AopiRepositry aopiRepositry;
+
+    @Resource(name = AopiService.PACKAGE_BEAN_NAME)
+    private AopiService aopiService;
 
     @Test
     public void contextLoads() {
@@ -93,9 +97,27 @@ public class DevloperMineApplicationTests {
         orderBy.put("age", "asc");
         PageModel pageModel = new PageModel.Instance().orderBy(new String[]{"id", "age"}, new String[]{"desc", "asc"}).newPageModel();
         PageModel pageModel2 = new PageModel.Instance().orderBy(orderBy).newPageModel();
-        BaseRepositry.parsePageModel(pageModel2);
-        List<Aopi> aopiList = aopiRepositry.selectAll();
+        List<Aopi> aopiList = null;
+        try {
+            BaseRepositry.parsePageModel(pageModel2);
+            aopiList = aopiRepositry.selectAll();
+        } finally {
+            PageHelper.clearPage();
+        }
         System.out.println(aopiList);
+    }
+
+    @Test
+    public void test03() {
+        System.out.println(aopiService.getList());
+    }
+
+    @Test
+    public void test04() {
+        Example example = new Example(Aopi.class);
+        example.createCriteria().andEqualTo("id", 3);
+        int count = aopiRepositry.updateByExample(new Aopi("1", 1), example);
+        System.out.println(count);
     }
 
 }

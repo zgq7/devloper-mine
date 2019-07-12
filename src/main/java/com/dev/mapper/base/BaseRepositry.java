@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -23,6 +24,10 @@ public class BaseRepositry<T> {
         return baseMapper.selectAll();
     }
 
+    public int updateByExample(T record, Example example) {
+        return baseMapper.updateByExample(record, example);
+    }
+
     public static void parsePageModel(PageModel pageModel) {
         LinkedHashMap<String, String> orderBy = pageModel.getOrderBy();
         List<String> sorts = Lists.newLinkedList();
@@ -30,11 +35,6 @@ public class BaseRepositry<T> {
                 sorts.add(k + " " + v)
         );
         String orders = String.join(",", sorts);
-        //保证线程安全
-        try {
-            PageHelper.startPage(pageModel.getPageNum(), pageModel.getPageSize(), orders);
-        } finally {
-            PageHelper.clearPage();
-        }
+        PageHelper.startPage(pageModel.getPageNum(), pageModel.getPageSize(), orders);
     }
 }
