@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * Created by zhugenqi on 2019/6/6.
+ * Created by zgq7 on 2019/6/6.
  */
 @RestController
 @RequestMapping(value = "/dev")
-public class TestController {
+public class TestController extends BaseController {
 
     @GetMapping(value = "")
     public Map<Object, Object> get() {

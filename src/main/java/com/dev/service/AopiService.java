@@ -19,6 +19,13 @@ public class AopiService {
     private AopiRepositry aopiRepositry;
 
     public List<Aopi> getList() {
+        System.out.println(1);
+        if (1 == 1)
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         return aopiRepositry.selectAll();
     }
 

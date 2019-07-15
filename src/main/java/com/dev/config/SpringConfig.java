@@ -4,14 +4,18 @@ import com.dev.filter.BaseFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import java.util.*;
 
 /**
  * Created by zgq7 on 2019/6/6.
  * 注册一些bean进入ioc
+ *
+ * @EnableAspectJAutoProxy 开启aop代理
  */
 @Configuration
+@EnableAspectJAutoProxy
 public class SpringConfig {
 
     @Bean
