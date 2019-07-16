@@ -1,0 +1,5 @@
+2019-07-12 10:07:02.701 WARN  [ main ] org.mybatis.spring.mapper.ClassPathMapperScanner   ->   44 ： No MyBatis mapper was found in '[com.dev]' package. Please check your configuration. 
+2019-07-12 10:16:15.167 WARN  [ main ] org.mybatis.spring.mapper.ClassPathMapperScanner   ->   44 ： No MyBatis mapper was found in '[com.dev]' package. Please check your configuration. 
+2019-07-12 17:43:29.007 WARN  [ main ] org.mybatis.spring.mapper.ClassPathMapperScanner   ->   44 ： No MyBatis mapper was found in '[com.dev]' package. Please check your configuration. 
+2019-07-12 17:45:24.210 WARN  [ main ] org.mybatis.spring.mapper.ClassPathMapperScanner   ->   44 ： No MyBatis mapper was found in '[com.dev]' package. Please check your configuration. 
+2019-07-12 17:53:15.218 WARN  [ main ] org.mybatis.spring.mapper.ClassPathMapperScanner   ->   44 ： No MyBatis mapper was found in '[com.dev]' package. Please check your configuration. 

@@ -1,0 +1,24 @@
+2019-07-09 11:51:32.374 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 11:52:43.724 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 11:59:11.879 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 11:59:37.901 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 11:59:50.179 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 14:37:54.071 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 14:38:20.122 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 14:42:59.863 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 14:43:45.779 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 14:43:48.484 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==>  Preparing: SELECT id,name,age FROM aopi  
+2019-07-09 14:43:48.513 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==> Parameters:  
+2019-07-09 14:43:48.541 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： <==      Total: 5 
+2019-07-09 14:44:27.762 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 14:44:29.834 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： ==>  Preparing: SELECT count(0) FROM aopi  
+2019-07-09 14:44:29.866 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： ==> Parameters:  
+2019-07-09 14:44:29.889 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： <==      Total: 1 
+2019-07-09 14:44:29.896 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==>  Preparing: SELECT id, name, age FROM aopi order by {} LIMIT ?, ?  
+2019-07-09 14:44:29.897 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==> Parameters: 4(Integer), 1(Integer) 
+2019-07-09 14:45:32.299 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
+2019-07-09 14:45:34.309 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： ==>  Preparing: SELECT count(0) FROM aopi  
+2019-07-09 14:45:34.341 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： ==> Parameters:  
+2019-07-09 14:45:34.366 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： <==      Total: 1 
+2019-07-09 14:45:34.369 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==>  Preparing: SELECT id, name, age FROM aopi order by {} LIMIT ?  
+2019-07-09 14:45:34.371 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==> Parameters: 10(Integer) 
