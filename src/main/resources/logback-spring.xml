@@ -6,6 +6,7 @@
         <encoder>
             <pattern>%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%-6level) %green([ %-25thread ]) %boldMagenta(%-50logger ->%5L) ： %cyan(%msg) %n</pattern>
             <charset>UTF-8</charset>
+
         </encoder>
     </appender>
 
