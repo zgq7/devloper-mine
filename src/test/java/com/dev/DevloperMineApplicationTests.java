@@ -120,4 +120,23 @@ public class DevloperMineApplicationTests {
         System.out.println(count);
     }
 
+    @Test
+    public void test05() {
+        Thread thread = new Thread(() -> {
+            try {
+                int i = 1 / 0;
+            } catch (RuntimeException e) {
+                System.out.println(0);
+            }
+        });
+
+        try {
+            thread.start();
+            Thread.sleep(1000);
+            System.out.println(1);
+        } catch (Exception e) {
+            System.out.println(2);
+        }
+    }
+
 }
