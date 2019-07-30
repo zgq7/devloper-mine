@@ -6,6 +6,7 @@ import com.dev.mapper.repositry.AopiRepositry;
 import com.dev.model.Aopi;
 import com.dev.service.AopiService;
 import com.dev.utils.PageModel;
+import com.dev.utils.TimeUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -105,11 +106,6 @@ public class DevloperMineApplicationTests {
             PageHelper.clearPage();
         }
         System.out.println(aopiList);
-    }
-
-    @Test
-    public void test03() {
-        System.out.println(aopiService.getList());
     }
 
     @Test

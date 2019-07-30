@@ -1,12 +1,14 @@
 package com.dev.controller;
 
+import com.dev.controller.bases.BaseController;
+import com.dev.service.AopiService;
 import com.google.common.collect.ImmutableMap;
 import okhttp3.*;
-import org.apache.commons.io.FileUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.io.*;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -16,9 +18,12 @@ import java.util.Map;
 @RequestMapping(value = "/dev")
 public class TestController extends BaseController {
 
+    @Resource(name = AopiService.PACKAGE_BEAN_NAME)
+    private AopiService aopiService;
+
     @GetMapping(value = "")
     public Map<Object, Object> get() {
-        return ImmutableMap.of("code", "get");
+        return ImmutableMap.of("code", aopiService.getAopList());
     }
 
     @PutMapping(value = "t")

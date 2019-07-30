@@ -79,7 +79,7 @@
         </rollingPolicy>
     </appender>
 
-    <!--error 级别的日志-->
+    <!--debug 级别的日志-->
     <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
@@ -104,6 +104,8 @@
     <logger name="org.apache.ibatis" level="DEBUG"/>
     <logger name="org.springframework" level="warn"/>
     <logger name="ch.qos.logback" level="DEBUG"/>
+    <!-- aop 日志设置为debug -->
+    <logger name="com.dev.config.TestAop" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
