@@ -2,6 +2,7 @@ package com.dev.controller;
 
 import com.dev.controller.bases.BaseController;
 import com.dev.service.AopiService;
+import com.dev.utils.exception.ServiceException;
 import com.google.common.collect.ImmutableMap;
 import okhttp3.*;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,8 @@ public class TestController extends BaseController {
 
     @GetMapping(value = "")
     public Map<Object, Object> get() {
+        if (1 == 1)
+            throw new NullPointerException();
         return ImmutableMap.of("code", aopiService.getAopList());
     }
 

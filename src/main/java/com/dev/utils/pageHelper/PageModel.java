@@ -1,4 +1,4 @@
-package com.dev.utils;
+package com.dev.utils.pageHelper;
 
 import com.google.common.collect.Maps;
 

@@ -1,7 +1,8 @@
 package com.dev;
 
-import com.dev.utils.TimeUtils;
+import com.dev.utils.time.TimeUtils;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 
 /**
  * Created on 2019-07-30 10:59.
@@ -23,5 +24,7 @@ public class NormallTest {
 
         System.out.println(TimeUtils.getFristDate(2019));
         System.out.println(TimeUtils.getLastDate(2019));
+
+        System.out.println(HttpStatus.OK);
     }
 }

@@ -105,7 +105,7 @@
     <logger name="org.springframework" level="warn"/>
     <logger name="ch.qos.logback" level="DEBUG"/>
     <!-- aop 日志设置为debug -->
-    <logger name="com.dev.config.TestAop" level="DEBUG"/>
+    <logger name="com.dev.config.aop.TestAop" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
