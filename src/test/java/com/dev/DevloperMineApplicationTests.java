@@ -4,7 +4,9 @@ import com.dev.mapper.base.BaseRepositry;
 import com.dev.mapper.mappers.AopiMapper;
 import com.dev.mapper.repositry.AopiRepositry;
 import com.dev.model.Aopi;
+import com.dev.model.email.EmailModel;
 import com.dev.service.AopiService;
+import com.dev.utils.email.MailSendUtils;
 import com.dev.utils.pageHelper.PageModel;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
@@ -36,6 +38,10 @@ public class DevloperMineApplicationTests {
 
     @Resource(name = AopiService.PACKAGE_BEAN_NAME)
     private AopiService aopiService;
+
+    @Autowired
+    private MailSendUtils mailSendUtils;
+
 
     @Test
     public void contextLoads() {
@@ -131,6 +137,18 @@ public class DevloperMineApplicationTests {
         } catch (Exception e) {
             System.out.println(2);
         }
+    }
+
+    @Test
+    public void EmaiTest() {
+        EmailModel emailModel = new EmailModel();
+        emailModel.setEmailTheme("测试");
+        emailModel.setRecieverName("董昕杰");
+        emailModel.setEmailContent("打屎你");
+        emailModel.setRecieverEmailAddress("3110320051@qq.com");
+        //emailModel.setRecieverEmailAddress("1140661106@qq.com");
+
+        mailSendUtils.sendEmail(emailModel);
     }
 
 }

@@ -3,12 +3,15 @@ package com.dev.config;
 import com.dev.config.aop.BaseAop;
 import com.dev.config.aop.RuntimeExceptionAspectJ;
 import com.dev.filter.BaseFilter;
+import com.dev.utils.email.MailSendUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.annotation.Order;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.*;
 
@@ -41,6 +44,13 @@ public class BeanRegistryCenterConfig {
 
         return filterFilterRegistrationBean;
     }
+
+
+    @Bean
+    public MailSendUtils mailSendUtils() {
+        return new MailSendUtils();
+    }
+
 
     /**
      * BaseAop bean 注册
