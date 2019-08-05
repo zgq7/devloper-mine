@@ -3,6 +3,7 @@ package com.dev;
 import com.alibaba.fastjson.JSON;
 import com.dev.utils.time.TimeUtils;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -23,18 +24,7 @@ public class NormallTest {
      **/
     @Test
     public void test01() {
-        System.out.println(TimeUtils.getFristDateTime(2019));
-        System.out.println(TimeUtils.getLastDateTime(2018));
-
-        System.out.println(TimeUtils.TimeToStampsOfSeconds(TimeUtils.getLastDateTime(2019)));
-        System.out.println(TimeUtils.TimeToStampsOfMills(TimeUtils.getLastDateTime(2019)));
-
-        System.out.println(TimeUtils.getFristDate(2019));
-        System.out.println(TimeUtils.getLastDate(2019));
-
-        System.out.println(HttpStatus.OK);
-
-        String i = null;
-        System.out.println(JSON.toJSONString(i));
+        System.out.println(String.format("asst:captcha:%s", "2222"));
+        System.out.println(RandomStringUtils.random(6));
     }
 }

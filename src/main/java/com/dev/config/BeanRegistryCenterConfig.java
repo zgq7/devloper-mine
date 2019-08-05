@@ -46,11 +46,21 @@ public class BeanRegistryCenterConfig {
     }
 
 
+    /**
+     * 邮箱工具类 bean 注册
+     **/
     @Bean
     public MailSendUtils mailSendUtils() {
         return new MailSendUtils();
     }
 
+    /**
+     * 本地线程 bean 注册
+     **/
+    @Bean(name = LocalThreadPool.PACKAGE_BEAN_NAME)
+    public LocalThreadPool localThreadPool() {
+        return new LocalThreadPool();
+    }
 
     /**
      * BaseAop bean 注册
@@ -61,7 +71,7 @@ public class BeanRegistryCenterConfig {
     }
 
     /**
-     * RuntimeExceptionAspectJ bean 注册
+     * 异常捕获类 RuntimeExceptionAspectJ bean 注册
      **/
     @Bean
     public RuntimeExceptionAspectJ runtimeExceptionAspectJ() {
