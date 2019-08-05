@@ -38,8 +38,7 @@ public class LocalThreadPool implements InitializingBean, DisposableBean {
      * handler                  一个处理器：当线程被锁、或者队列的容量达到上限时 被调用
      **/
     public final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, 3000, TimeUnit.MILLISECONDS
-            , workQueue, defaultThreadFactory, handler
-    );
+            , workQueue, defaultThreadFactory, handler);
 
     /**
      * 本地线程池被销毁后的回调方法
