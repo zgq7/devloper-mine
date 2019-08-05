@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author zgq7
  */
-public class EmailModel implements Serializable{
+public class EmailModel implements Serializable {
 
     /**
      * 收件人姓名

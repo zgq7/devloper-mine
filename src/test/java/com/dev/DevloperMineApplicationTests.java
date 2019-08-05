@@ -1,5 +1,6 @@
 package com.dev;
 
+import com.dev.config.LocalThreadPool;
 import com.dev.mapper.base.BaseRepositry;
 import com.dev.mapper.mappers.AopiMapper;
 import com.dev.mapper.repositry.AopiRepositry;
@@ -19,10 +20,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
 
 
@@ -41,6 +46,9 @@ public class DevloperMineApplicationTests {
 
     @Autowired
     private MailSendUtils mailSendUtils;
+
+    @Autowired
+    private LocalThreadPool localThreadPool;
 
 
     @Test
@@ -139,16 +147,46 @@ public class DevloperMineApplicationTests {
         }
     }
 
+    /**
+     * Java Mail 文本发送
+     **/
     @Test
     public void EmaiTest() {
         EmailModel emailModel = new EmailModel();
         emailModel.setEmailTheme("测试");
         emailModel.setRecieverName("董昕杰");
         emailModel.setEmailContent("打屎你");
-        emailModel.setRecieverEmailAddress("3110320051@qq.com");
-        //emailModel.setRecieverEmailAddress("1140661106@qq.com");
+        //emailModel.setRecieverEmailAddress("3110320051@qq.com");
+        emailModel.setRecieverEmailAddress("1140661106@qq.com");
 
-        mailSendUtils.sendEmail(emailModel);
+        mailSendUtils.sendEmailAsText(emailModel);
+    }
+
+    /**
+     * Java Mail 网页发送
+     **/
+    @Test
+    public void EmailTest2() throws MessagingException {
+        EmailModel emailModel = new EmailModel();
+        emailModel.setEmailTheme("测试");
+        emailModel.setRecieverName("董昕杰");
+        emailModel.setEmailContent("");
+        //emailModel.setRecieverEmailAddress("3110320051@qq.com");
+        emailModel.setRecieverEmailAddress("1140661106@qq.com");
+
+        Thread t = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(10000);
+            }
+        });
+
+        System.out.println(localThreadPool.threadPoolExecutor.getTaskCount());
+        t.run();
+        System.out.println(localThreadPool.threadPoolExecutor.getTaskCount());
+        t.start();
+        System.out.println(localThreadPool.threadPoolExecutor.getTaskCount());
+        //mailSendUtils.sendEmailAsSysExceptionHtml(emailModel);
     }
 
 }

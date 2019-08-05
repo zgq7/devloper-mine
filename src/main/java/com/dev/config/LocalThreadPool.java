@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.*;
 
 /**
@@ -16,7 +17,7 @@ public class LocalThreadPool implements InitializingBean, DisposableBean {
 
     public static final String PACKAGE_BEAN_NAME = "localThreadPool";
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(LocalThreadPool.class);
 
     /**
      * capacity 队列容量
@@ -45,8 +46,7 @@ public class LocalThreadPool implements InitializingBean, DisposableBean {
      **/
     @Override
     public void destroy() throws Exception {
-        if (this.threadPoolExecutor == null)
-            logger.info("指令->[本地线程池已销毁]");
+        logger.info("指令->[本地线程池已销毁]");
     }
 
     /**
@@ -54,8 +54,7 @@ public class LocalThreadPool implements InitializingBean, DisposableBean {
      **/
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (this.threadPoolExecutor != null)
-            logger.info("指令->[本地线程池已成功初始化]");
+        logger.info("指令->[本地线程池已成功初始化]");
     }
 
 }
