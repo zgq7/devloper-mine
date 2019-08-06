@@ -9,6 +9,7 @@ import com.dev.model.email.EmailModel;
 import com.dev.service.AopiService;
 import com.dev.utils.email.MailSendUtils;
 import com.dev.utils.pageHelper.PageModel;
+import com.dev.utils.time.TimeUtils;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -28,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -166,7 +168,7 @@ public class DevloperMineApplicationTests {
      * Java Mail 网页发送
      **/
     @Test
-    public void EmailTest2() throws MessagingException {
+    public void EmailTest2() throws MessagingException, InterruptedException {
         EmailModel emailModel = new EmailModel();
         emailModel.setEmailTheme("测试");
         emailModel.setRecieverName("董昕杰");
@@ -174,19 +176,25 @@ public class DevloperMineApplicationTests {
         //emailModel.setRecieverEmailAddress("3110320051@qq.com");
         emailModel.setRecieverEmailAddress("1140661106@qq.com");
 
-        Thread t = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(10000);
-            }
-        });
-
-        System.out.println(localThreadPool.threadPoolExecutor.getTaskCount());
-        t.run();
-        System.out.println(localThreadPool.threadPoolExecutor.getTaskCount());
-        t.start();
-        System.out.println(localThreadPool.threadPoolExecutor.getTaskCount());
         //mailSendUtils.sendEmailAsSysExceptionHtml(emailModel);
+
+        Thread thread1 = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(() -> System.out.println(1));
+        Thread thread2 = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(() -> System.out.println(1));
+        Thread thread3 = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(() -> System.out.println(1));
+        Thread thread4 = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(() -> System.out.println(1));
+        Thread thread5 = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(() -> System.out.println(1));
+        Thread thread6 = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(() -> System.out.println(1));
+        Thread thread7 = localThreadPool.threadPoolExecutor.getThreadFactory().newThread(() -> System.out.println(1));
+
+        thread1.wait(5000);
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
+        thread5.start();
+        thread6.start();
+        thread7.start();
+
     }
 
 }
