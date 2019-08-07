@@ -29,8 +29,10 @@ public class MailSendUtils {
 
     /**
      * 发送者地址
+     * @Value 不能与 static 混用，否则变量无法被@Value赋值
      **/
-    private static String posterAdress = "1140661106@qq.com";
+    @Value("${spring.mail.username}")
+    private String posterAdress;
 
     /**
      * 发送者姓名

@@ -16,6 +16,7 @@ import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tk.mybatis.mapper.entity.Example;
@@ -52,12 +53,12 @@ public class DevloperMineApplicationTests {
     @Autowired
     private LocalThreadPool localThreadPool;
 
+    @Value("${spring.mail.username}")
+    private String s;
 
     @Test
     public void contextLoads() {
-        Example example = new Example(Aopi.class);
-        List<Aopi> aopiList = aopiMapper.selectByExample(example);
-        System.out.println(aopiList);
+        System.out.println(s);
     }
 
     /**
@@ -156,10 +157,11 @@ public class DevloperMineApplicationTests {
     public void EmaiTest() {
         EmailModel emailModel = new EmailModel();
         emailModel.setEmailTheme("测试");
-        emailModel.setRecieverName("董昕杰");
-        emailModel.setEmailContent("打屎你");
+        emailModel.setRecieverName("测试");
+        emailModel.setEmailContent("测试");
         //emailModel.setRecieverEmailAddress("3110320051@qq.com");
-        emailModel.setRecieverEmailAddress("1140661106@qq.com");
+        //emailModel.setRecieverEmailAddress("1140661106@qq.com");
+        emailModel.setRecieverEmailAddress("thisman@zgq7.club");
 
         mailSendUtils.sendEmailAsText(emailModel);
     }
