@@ -34,12 +34,19 @@ public class LocalThreadPool implements InitializingBean, DisposableBean {
      * maximumPoolSize          线程池允许最大线程池数量
      * keepAliveTime            当线程数超过本地线程核心数同时又小于设置的最大线程数，需要重新创建一个新线程时需要等待的时间
      * TimeUnit.MILLISECONDS    时间单位，这里我设置的是豪秒
-     * workQueue                一个队列：当一个task被执行前进行使用
+     * workQueue                一个队列：当一个task被执行前进行保存该task，用来保存等待的线程
      * threadFactory            用于创建新线程的线程工厂
      * handler                  一个处理器：当线程被锁、或者队列的容量达到上限时 被调用
      **/
     public final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, 3000, TimeUnit.MILLISECONDS
             , workQueue, defaultThreadFactory, handler);
+
+    /**
+     * 使用本地线程池执行任务
+     **/
+    public void execute(Runnable runnable) {
+        threadPoolExecutor.execute(runnable);
+    }
 
     /**
      * 本地线程池被销毁后的回调方法

@@ -1,9 +1,14 @@
 package com.dev;
 
 import com.dev.config.LocalThreadPool;
+import com.dev.utils.zpnag.TestImpl01;
+import com.dev.utils.zpnag.TestInterface;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
@@ -18,35 +23,24 @@ public class NormallTest {
      * TimeUtils 类的功能测试
      **/
     @Test
-    public void test01() throws InterruptedException {
+    public void test01() throws Exception {
         //System.out.println(String.format("asst:captcha:%s", "2222"));
         //System.out.println(RandomStringUtils.random(6));
-        int[] i = new int[]{0};
-/*        Thread thread1 = new Thread(() -> {
-            synchronized (this) {
-                System.out.println("thread1->" + i[0]);
-                i[0]++;
-            }
-        });
 
-        Thread thread2 = new Thread(() -> {
-            synchronized (this) {
-                System.out.println("thread2->" + i[0]);
-                i[0]++;
-            }
-        });*/
+        Class klass = Class.forName(TestImpl01.PACKAGE_PATH);
+        System.out.println(klass);
+        Object intance = klass.newInstance();
+        System.out.println(intance);
 
-        Thread thread3 = new Thread(() -> {
-            System.out.println("thread3->" + i[0]);
-            i[0]++;
-        });
+        Method method = klass.getMethod("test03", Integer.class);
+        Method method2 = klass.getMethod("test2");
+        System.out.println(method);
 
-        thread3.start();
-        //thread1.start();
-        //thread2.start();
-
-        //thread1.run();
-        //thread2.run();
+        method.invoke(intance, 1);
+        method2.invoke(intance);
 
     }
+
+
+
 }

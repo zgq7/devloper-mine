@@ -15,6 +15,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +31,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -37,6 +40,8 @@ import java.util.stream.Collectors;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DevloperMineApplicationTests {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private AopiMapper aopiMapper;
@@ -151,6 +156,88 @@ public class DevloperMineApplicationTests {
     }
 
     /**
+     * 线程测试
+     **/
+    @Test
+    public void test07() {
+        localThreadPool.execute(() -> {
+            synchronized (Thread.currentThread()) {
+                try {
+                    Thread.currentThread().wait();
+                    logger.info("测试1");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        localThreadPool.execute(() -> {
+            synchronized (Thread.currentThread()) {
+                try {
+                    Thread.currentThread().wait();
+                    logger.info("测试2");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        localThreadPool.execute(() -> {
+            synchronized (Thread.currentThread()) {
+                try {
+                    Thread.currentThread().wait();
+                    logger.info("测试3");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        localThreadPool.execute(() -> {
+            synchronized (Thread.currentThread()) {
+                try {
+                    Thread.currentThread().wait();
+                    logger.info("测试4");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        localThreadPool.execute(() -> {
+            synchronized (Thread.currentThread()) {
+                try {
+                    Thread.currentThread().wait();
+                    logger.info("测试5");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        localThreadPool.execute(() -> logger.info("测试6"));
+        localThreadPool.execute(() -> logger.info("测试7"));
+        localThreadPool.execute(() -> logger.info("测试8"));
+        BlockingQueue<Runnable> queue = localThreadPool.threadPoolExecutor.getQueue();
+
+        logger.info("线程池核心数量：{}", localThreadPool.threadPoolExecutor.getPoolSize());
+        logger.info("需要执行的任务数：{}", localThreadPool.threadPoolExecutor.getTaskCount());
+        logger.info("正在执行的任务数：{}", localThreadPool.threadPoolExecutor.getActiveCount());
+        logger.info("已完成任务数：{}", localThreadPool.threadPoolExecutor.getCompletedTaskCount());
+        logger.info("最大任务数：{}", localThreadPool.threadPoolExecutor.getLargestPoolSize());
+
+
+        synchronized (Thread.currentThread()) {
+            try {
+                Thread.currentThread().wait(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
      * Java Mail 文本发送
      **/
     @Test
@@ -198,5 +285,6 @@ public class DevloperMineApplicationTests {
         thread7.start();
 
     }
+
 
 }
