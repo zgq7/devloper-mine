@@ -1,11 +1,17 @@
 package com.dev.controller;
 
+import com.dev.config.LocalThreadPool;
 import com.dev.controller.bases.BaseController;
 import com.dev.service.AopiService;
 import com.dev.utils.exception.ServiceException;
+import com.dev.utils.webSocket.MessageModel;
+import com.dev.utils.webSocket.SocketManager;
+import com.dev.utils.webSocket.SocketServer;
 import com.google.common.collect.ImmutableMap;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -22,12 +28,33 @@ public class TestController extends BaseController {
     @Resource(name = AopiService.PACKAGE_BEAN_NAME)
     private AopiService aopiService;
 
+    @Autowired
+    private SocketManager socketManager;
+    @Autowired
+    private SocketServer socketServer;
+
+    /**
+     * 异常  测试路径
+     * Email 测试路径
+     **/
     @GetMapping(value = "")
     public Map<Object, Object> get() {
         if (1 == 1)
             throw new NullPointerException();
         return ImmutableMap.of("code", aopiService.getAopList());
     }
+
+    /**
+     * webSocket  测试路径
+     **/
+    @PostMapping(value = "ws/{id}")
+    public void ws(@PathVariable(value = "id") String id, @RequestBody Map<Object, Object> body) {
+        String msg = (String) body.get("msg");
+        MessageModel messageModel = new MessageModel(id, 0, msg);
+        SocketManager.singleCast(messageModel);
+        SocketManager.boardCast(messageModel);
+    }
+
 
     @PutMapping(value = "t")
     public Map<Object, Object> t() {
@@ -39,6 +66,9 @@ public class TestController extends BaseController {
         return ImmutableMap.of("code", "post");
     }
 
+    /**
+     * 使用 OKhttp3 下载、爬取数据
+     **/
     public static void main(String[] args) throws IOException {
 
 

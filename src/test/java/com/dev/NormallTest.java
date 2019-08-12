@@ -1,16 +1,10 @@
 package com.dev;
 
-import com.dev.config.LocalThreadPool;
-import com.dev.utils.zpnag.TestImpl01;
-import com.dev.utils.zpnag.TestInterface;
+import com.dev.utils.zpang.TestImpl01;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created on 2019-07-30 10:59.
@@ -25,7 +19,7 @@ public class NormallTest {
     @Test
     public void test01() throws Exception {
         //System.out.println(String.format("asst:captcha:%s", "2222"));
-        //System.out.println(RandomStringUtils.random(6));
+        System.out.println(RandomStringUtils.random(6));
 
         Class klass = Class.forName(TestImpl01.PACKAGE_PATH);
         System.out.println(klass);
