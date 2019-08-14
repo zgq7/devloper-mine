@@ -63,6 +63,13 @@ public class TimeUtils {
     }
 
     /**
+     * 获取当前时间戳
+     **/
+    public static long getTimestampNow() {
+        return LocalDateTime.now().atZone(ZONE_ID).toInstant().toEpochMilli();
+    }
+
+    /**
      * @param year 查询年份
      * @return 含有 #{year} 年的第一天,精确到毫秒
      **/

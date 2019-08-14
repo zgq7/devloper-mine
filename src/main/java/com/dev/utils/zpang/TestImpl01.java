@@ -1,5 +1,6 @@
 package com.dev.utils.zpang;
 
+
 /**
  * Created on 2019-08-08 15:10.
  *
@@ -7,7 +8,7 @@ package com.dev.utils.zpang;
  */
 public class TestImpl01 implements TestInterface {
 
-    public static String PACKAGE_PATH = "com.dev.utils.zpnag.TestImpl01";
+    public static String PACKAGE_PATH = "com.dev.utils.zpang.TestImpl01";
 
     @Override
     public void test2() {

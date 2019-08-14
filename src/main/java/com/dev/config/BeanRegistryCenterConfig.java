@@ -58,7 +58,7 @@ public class BeanRegistryCenterConfig {
      **/
     @Bean(name = LocalThreadPool.PACKAGE_BEAN_NAME)
     public LocalThreadPool localThreadPool() {
-        return new LocalThreadPool();
+        return LocalThreadPool.getInstance();
     }
 
     /**

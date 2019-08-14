@@ -1,6 +1,9 @@
 package com.dev.utils.webSocket;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dev.config.LocalThreadPool;
+import com.dev.utils.time.TimeUtils;
+import org.apache.tomcat.websocket.WsSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +28,24 @@ public class SocketServer {
 
     @OnOpen
     public void onOpen(Session session) {
-        this.session = session;
-        SocketManager.addSession(session);
-        logger.info("新的客户端【{}】,当前大小：{}", session.getId(), SocketManager.getTotal());
+        synchronized (Thread.currentThread()) {
+            this.session = session;
+            SocketManager.addSession(session.getId(), session);
+            logger.info("新的客户端【{}】,当前大小：{}", session.getId(), SocketManager.getTotal());
+        }
     }
 
     @OnClose
     public void onClose(Session session) {
         SocketManager.removeSession(session);
-        logger.info("客户端【{}】关闭连接", session.getId());
+        logger.info("客户端【{}】关闭连接,当前大小：{}", session.getId(),SocketManager.getTotal());
     }
 
     @OnMessage
     public void onMessage(Session session, String message) {
         logger.info("客户端：【{}】有新消息：{}", session.getId(), message);
-        MessageModel messageModel = new MessageModel("0", 0, message);
-        SocketManager.boardCast(messageModel);
+        MessageModel messageModel = JSONObject.parseObject(message, MessageModel.class);
+        SocketManager.singleCast(messageModel);
     }
 
     @OnError

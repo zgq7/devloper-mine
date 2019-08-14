@@ -64,4 +64,21 @@ public class LocalThreadPool implements InitializingBean, DisposableBean {
         logger.info("指令->[本地线程池已成功初始化]");
     }
 
+
+    //=====================================================获取数据池实例-单例模式
+    private static LocalThreadPool localThreadPool = null;
+
+    private LocalThreadPool() {
+    }
+
+    public static LocalThreadPool getInstance() {
+        synchronized (LocalThreadPool.class) {
+            if (localThreadPool == null) {
+                localThreadPool = new LocalThreadPool();
+                return localThreadPool;
+            }
+        }
+        return localThreadPool;
+    }
+
 }

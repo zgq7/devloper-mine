@@ -1,6 +1,8 @@
 package com.dev;
 
+import com.dev.config.LocalThreadPool;
 import com.dev.utils.zpang.TestImpl01;
+import com.dev.utils.zpang.TestInterface;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -19,7 +21,7 @@ public class NormallTest {
     @Test
     public void test01() throws Exception {
         //System.out.println(String.format("asst:captcha:%s", "2222"));
-        System.out.println(RandomStringUtils.random(6));
+        //System.out.println(RandomStringUtils.random(6));
 
         Class klass = Class.forName(TestImpl01.PACKAGE_PATH);
         System.out.println(klass);
@@ -35,6 +37,27 @@ public class NormallTest {
 
     }
 
+    @Test
+    public void test02() {
+        Thread thread1 = new Thread(() -> {
+            LocalThreadPool localThreadPool1 = LocalThreadPool.getInstance();
+            System.out.println(localThreadPool1.hashCode());
+        });
+        Thread thread2 = new Thread(() -> {
+            LocalThreadPool localThreadPool2 = LocalThreadPool.getInstance();
+            System.out.println(localThreadPool2.hashCode());
+        });
 
+        thread1.start();
+        thread2.start();
+
+        try {
+            synchronized (Thread.currentThread()) {
+                Thread.sleep(10000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -10,6 +10,7 @@ import com.dev.service.AopiService;
 import com.dev.utils.email.MailSendUtils;
 import com.dev.utils.pageHelper.PageModel;
 import com.dev.utils.time.TimeUtils;
+import com.dev.utils.zpang.TestInterface;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
 
 
 @RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,classes = DevloperMineApplication.class)
 @SpringBootTest
 public class DevloperMineApplicationTests {
 
