@@ -1,9 +1,12 @@
 package com.dev.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.dev.config.LocalThreadPool;
 import com.dev.controller.bases.BaseController;
 import com.dev.service.AopiService;
 import com.dev.utils.exception.ServiceException;
+import com.dev.utils.socket.MsgModel;
+import com.dev.utils.socket.io.IOSocketServer;
 import com.dev.utils.webSocket.MessageModel;
 import com.dev.utils.webSocket.SocketManager;
 import com.dev.utils.webSocket.SocketServer;
@@ -55,10 +58,13 @@ public class TestController extends BaseController {
         SocketManager.boardCast(messageModel);
     }
 
-
-    @PutMapping(value = "t")
-    public Map<Object, Object> t() {
-        return ImmutableMap.of("code", "put");
+    /**
+     * socket测试路径
+     **/
+    @PostMapping(value = "sk")
+    public void t(@RequestBody Map<Object, Object> body) {
+        MsgModel msgModel = JSON.parseObject(JSON.toJSONString(body), MsgModel.class);
+        IOSocketServer.openConnection(msgModel);
     }
 
     @PostMapping(value = "s")

@@ -1,4 +1,4 @@
-package com.dev.utils.socket;
+package com.dev.utils.socket.io;
 
 import com.dev.config.LocalThreadPool;
 import org.slf4j.Logger;
@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.ConnectException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * Created on 2019-08-14 14:16.
@@ -26,25 +26,12 @@ public class SocketClient {
     public static void main(String[] args) {
         if (isPassIP(SOCKET_SERVER_IP)) {
             try {
-                Socket socket = new Socket(SOCKET_SERVER_IP, 8366);
-                logger.info("socket 客户端已成功启动，服务器ip地址：{}", socket.getInetAddress());
+                Socket socket = new Socket(SOCKET_SERVER_IP, 8366, Inet4Address.getByName("127.0.0.9"), 4366);
+                logger.info("socket 客户端已成功启动，服务器ip地址：{},本机ip地址：{}", socket.getInetAddress(), socket.getLocalAddress());
 
-                OutputStream os = socket.getOutputStream();
-                DataOutputStream dos = new DataOutputStream(os);
-                InputStream is = socket.getInputStream();
-                DataInputStream dis = new DataInputStream(is);
-
-                while(true){
-                    Scanner sc = new Scanner(System.in);
-                    String str = sc.next();
-                    dos.writeUTF(str);
-                    String msg = dis.readUTF();
-                    System.out.println("收到服务端信息"+msg);
-                }
-
-/*                LocalThreadPool.getInstance().execute(() -> {
+                LocalThreadPool.getInstance().execute(() -> {
                     try {
-                        MessageUtils.sendTextMsg(socket, msg);
+                        MessageUtils.sendTextMsg(socket);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -56,7 +43,9 @@ public class SocketClient {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                });*/
+                });
+
+                logger.info("收发线程启动完毕");
 
             } catch (ConnectException e) {
                 logger.error("服务器连接失败");

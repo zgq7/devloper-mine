@@ -49,7 +49,7 @@ public class RuntimeExceptionAspectJ {
         //emailModel.setRecieverEmailAddress("3110320051@qq.com");
         emailModel.setRecieverEmailAddress("1140661106@qq.com");
         //mailSendUtils.sendEmailAsSysExceptionHtml(emailModel);
-        localThreadPool.threadPoolExecutor.execute(() -> mailSendUtils.sendEmailAsSysExceptionHtml(emailModel));
+        //localThreadPool.threadPoolExecutor.execute(() -> mailSendUtils.sendEmailAsSysExceptionHtml(emailModel));
         throw new ServiceException(ExceptionCodes.getCodeByKlass(klass), ExceptionCodes.getMsgByKlass(klass));
     }
 

@@ -2,8 +2,6 @@ package com.dev;
 
 import com.dev.config.LocalThreadPool;
 import com.dev.utils.zpang.TestImpl01;
-import com.dev.utils.zpang.TestInterface;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
