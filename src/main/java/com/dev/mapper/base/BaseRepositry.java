@@ -27,11 +27,15 @@ public class BaseRepositry<T> {
 
     public static void parsePageModel(PageModel pageModel) {
         LinkedHashMap<String, String> orderBy = pageModel.getOrderBy();
-        List<String> sorts = Lists.newLinkedList();
-        orderBy.forEach((k, v) ->
-                sorts.add(k + " " + v)
-        );
-        String orders = String.join(",", sorts);
-        PageHelper.startPage(pageModel.getPageNum(), pageModel.getPageSize(), orders);
+        if (orderBy == null) {
+            PageHelper.startPage(pageModel.getPageNum(), pageModel.getPageSize());
+        } else {
+            List<String> sorts = Lists.newLinkedList();
+            orderBy.forEach((k, v) ->
+                    sorts.add(k + " " + v)
+            );
+            String orders = String.join(",", sorts);
+            PageHelper.startPage(pageModel.getPageNum(), pageModel.getPageSize(), orders);
+        }
     }
 }

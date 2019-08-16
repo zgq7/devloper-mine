@@ -12,6 +12,7 @@ import com.dev.utils.pageHelper.PageModel;
 import com.dev.utils.time.TimeUtils;
 import com.dev.utils.zpang.TestInterface;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.junit.Test;
@@ -39,8 +40,8 @@ import java.util.stream.Collectors;
 
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,classes = DevloperMineApplication.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = DevloperMineApplication.class)
+//@SpringBootTest
 public class DevloperMineApplicationTests {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -120,14 +121,17 @@ public class DevloperMineApplicationTests {
         orderBy.put("age", "asc");
         PageModel pageModel = new PageModel.Instance().orderBy(new String[]{"id", "age"}, new String[]{"desc", "asc"}).newPageModel();
         PageModel pageModel2 = new PageModel.Instance().orderBy(orderBy).newPageModel();
-        List<Aopi> aopiList = null;
+        PageModel pageModel3 = new PageModel.Instance().newPageModel();
+        List<Aopi> aopiList;
         try {
-            BaseRepositry.parsePageModel(pageModel2);
+            BaseRepositry.parsePageModel(pageModel3);
             aopiList = aopiRepositry.selectAll();
+            PageInfo<Aopi> pageInfo = new PageInfo<>(aopiList);
+            System.out.println(pageInfo);
         } finally {
             PageHelper.clearPage();
         }
-        System.out.println(aopiList);
+        //System.out.println(aopiList);
     }
 
     @Test
