@@ -26,7 +26,7 @@ public class SocketClient {
     public static void main(String[] args) {
         if (isPassIP(SOCKET_SERVER_IP)) {
             try {
-                Socket socket = new Socket(SOCKET_SERVER_IP, 8366, Inet4Address.getByName("127.0.0.9"), 4366);
+                Socket socket = new Socket(SOCKET_SERVER_IP, 8366, Inet4Address.getByName("127.0.0.8"), 4366);
                 logger.info("socket 客户端已成功启动，服务器ip地址：{},本机ip地址：{}", socket.getInetAddress(), socket.getLocalAddress());
 
                 LocalThreadPool.getInstance().execute(() -> {

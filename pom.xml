@@ -20,11 +20,11 @@
         <!-- MyBatis Generator -->
         <!-- Java接口和实体类 -->
         <targetJavaProject>${basedir}/src/main/java</targetJavaProject>
-        <targetMapperPackage>com.dev.mapper.mappers</targetMapperPackage>
-        <targetModelPackage>com.dev.model</targetModelPackage>
+        <targetMapperPackage>com.dev.mapper.mappers1</targetMapperPackage>
+        <targetModelPackage>com.dev.model1</targetModelPackage>
         <!-- XML生成路径 -->
         <targetResourcesProject>${basedir}/src/main/resources</targetResourcesProject>
-        <targetXMLPackage>mapper</targetXMLPackage>
+        <targetXMLPackage>mapper1</targetXMLPackage>
 
         <!-- 通用mapper -->
         <tk.mybatis.version>4.1.5</tk.mybatis.version>
