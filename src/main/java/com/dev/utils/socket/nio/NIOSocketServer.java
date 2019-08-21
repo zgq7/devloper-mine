@@ -1,5 +1,7 @@
 package com.dev.utils.socket.nio;
 
+import com.dev.config.LocalThreadPool;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.Buffer;
@@ -35,47 +37,52 @@ public class NIOSocketServer implements NIOBaseSocket {
     @Override
     public void init(String ip, int port) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-
-        //设置为非阻塞
-        serverSocketChannel.configureBlocking(false);
+        this.selector = Selector.open();
 
         serverSocketChannel.socket().bind(new InetSocketAddress(ip, port));
-
-        this.selector = Selector.open();
+        //设置为非阻塞
+        serverSocketChannel.configureBlocking(false);
         //注册到selector上
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-        System.out.println("server 启动成功");
+        System.out.println(this.selector.hashCode() + " ->server 启动成功");
     }
 
     @Override
     public void getNewMsg() throws IOException {
-        while (true) {
-            //管道中key的数量
-            int keyNumber = selector.select();
+        int i = 0;
+        while (this.selector.select() > 0) {
             Set<SelectionKey> selectionKeySet = this.selector.selectedKeys();
             selectionKeySet.forEach(key -> {
                 try {
                     //测试该管道是否可以建立一个新的socket连接
                     if (key.isAcceptable()) {
+                        System.out.println("reg");
                         registry(key);
                     }
-
                     //key 可读时
                     if (key.isReadable()) {
                         readMsg(key);
                     }
-
                     //key可写时
                     if (key.isWritable() && key.isValid()) {
-                        writeMsg(key);
+                        LocalThreadPool.getInstance().execute(() -> {
+                            try {
+                                writeMsg(key);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
                     }
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                this.selector.selectedKeys().remove(key);
+                selectionKeySet.remove(key);
             });
+
+            i++;
         }
 
     }
@@ -85,39 +92,49 @@ public class NIOSocketServer implements NIOBaseSocket {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
 
         SocketChannel client = server.accept();
-        System.out.println(2);
         client.configureBlocking(false);
-        client.register(this.selector, SelectionKey.OP_READ);
+
+        String msg = "hello";
+        client.write(ByteBuffer.wrap(msg.getBytes()));
+        client.register(this.selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
 
     @Override
     public void readMsg(SelectionKey key) throws IOException {
-        System.out.println(1);
         SocketChannel client = (SocketChannel) key.channel();
-        this.readBuffer.clear();
-        client.read(this.readBuffer);
-        //flip方法可使buffer中的ops归0
-        this.readBuffer.flip();
-        byte[] bytes = new byte[this.readBuffer.position()];
-        this.readBuffer.get(bytes);
-        String msg = new String(bytes).trim();
 
-        System.out.println("client msg：" + msg);
-        client.register(this.selector, SelectionKey.OP_WRITE);
+        this.readBuffer.clear();
+        try {
+            int readsum = client.read(this.readBuffer);
+            int position = this.readBuffer.position();
+            //flip方法可使buffer中的ops归0
+            this.readBuffer.flip();
+
+            byte[] bytes = new byte[position];
+            for (int i = 0; i < position; i++) {
+                bytes[i] = this.readBuffer.get();
+            }
+            String msg = new String(bytes).trim();
+
+            System.out.println("client msg：" + msg);
+            this.readBuffer.clear();
+        } catch (IOException e) {
+            this.selector.selectedKeys().remove(key);
+            System.out.println("远程主机或已关闭，获取信息失败");
+        }
     }
 
     @Override
     public void writeMsg(SelectionKey key) throws IOException {
-        System.out.println(3);
-        this.writeBuffer.clear();
-
         SocketChannel toClient = (SocketChannel) key.channel();
-        Scanner scanner = new Scanner(System.in);
-        String msg = scanner.nextLine();
 
+        //String msg = "1";
+        String msg = new Scanner(System.in).nextLine();
         this.writeBuffer = ByteBuffer.wrap(msg.getBytes());
         toClient.write(this.writeBuffer);
-        toClient.register(this.selector, SelectionKey.OP_READ);
+
+        this.writeBuffer.clear();
+        //toClient.register(this.selector, SelectionKey.OP_READ, this.writeBuffer);
     }
 
     public static void main(String[] args) throws IOException {

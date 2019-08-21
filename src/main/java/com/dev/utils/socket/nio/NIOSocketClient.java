@@ -6,7 +6,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * Created on 2019-08-19 15:58.
@@ -39,71 +41,83 @@ public class NIOSocketClient implements NIOBaseSocket {
     @Override
     public void init(String ip, int port) throws IOException {
         SocketChannel client = SocketChannel.open();
+        this.selector = Selector.open();
 
         client.configureBlocking(false);
 
-        this.selector = Selector.open();
-
         client.connect(new InetSocketAddress(ip, port));
 
-        key = client.register(selector, SelectionKey.OP_CONNECT);
-
-        System.out.println("client 启动成功 ");
-
+        this.key = client.register(selector, SelectionKey.OP_CONNECT);
+        System.out.println(this.selector.hashCode() + " -> client 启动成功 ");
     }
 
     @Override
     public void getNewMsg() throws IOException {
-        if (key != null)
-            while (true) {
-                try {
-                    //key可读时
-                    if (key.isReadable()) {
-                        readMsg(key);
-                    }
-
-                    //key可写时
-                    if (key.isWritable() && key.isValid()) {
-                        writeMsg(key);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+        int i = 0;
+        while (this.selector.select() > 0) {
+            Set<SelectionKey> keySet = this.selector.selectedKeys();
+            for (SelectionKey key : keySet) {
+                if (key.isConnectable()) {
+                    System.out.println("reg");
+                    registry(key);
                 }
-                this.selector.selectedKeys().remove(key);
+                //key可读时
+                if (key.isReadable()) {
+                    readMsg(key);
+                }
+                //key可写时
+                if (key.isWritable() && key.isValid()) {
+                    writeMsg(key);
+                }
+                keySet.remove(key);
             }
-
+            i++;
+        }
     }
 
     @Override
     public void registry(SelectionKey key) throws IOException {
+        SocketChannel client = (SocketChannel) key.channel();
+        if (client.isConnectionPending()) {
+            client.finishConnect();
+        }
+        client.configureBlocking(false);
+
+        String msg = "hello";
+        client.write(ByteBuffer.wrap(msg.getBytes()));
+        client.register(this.selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
 
     @Override
     public void readMsg(SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
+
         this.readBuffer.clear();
         client.read(this.readBuffer);
-        byte[] bytes = new byte[this.readBuffer.position()];
-        this.readBuffer.get(bytes);
-        String msg = new String(bytes).trim();
-
+        int position = this.readBuffer.position();
         //flip方法可使buffer中的ops归0
         this.readBuffer.flip();
-        client.register(this.selector, SelectionKey.OP_WRITE);
+
+        byte[] bytes = new byte[position];
+        for (int i = 0; i < position; i++) {
+            bytes[i] = this.readBuffer.get();
+        }
+        String msg = new String(bytes).trim();
+
         System.out.println("server msg：" + msg);
+        this.readBuffer.clear();
     }
 
     @Override
     public void writeMsg(SelectionKey key) throws IOException {
-        this.writeBuffer.clear();
-        SocketChannel Client = (SocketChannel) key.channel();
+        SocketChannel client = (SocketChannel) key.channel();
+
         Scanner scanner = new Scanner(System.in);
         String msg = scanner.nextLine();
-
         this.writeBuffer = ByteBuffer.wrap(msg.getBytes());
-        Client.write(this.writeBuffer);
-        Client.register(this.selector, SelectionKey.OP_READ);
+        client.write(this.writeBuffer);
+
+        this.writeBuffer.clear();
     }
 
     public static void main(String[] args) throws IOException {

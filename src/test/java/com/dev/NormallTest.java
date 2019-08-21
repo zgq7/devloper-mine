@@ -58,4 +58,21 @@ public class NormallTest {
         }
     }
 
+    @Test
+    public void test03() {
+        // 针对二进制，转换成二进制后向左移动n位，后面用0补齐
+        System.out.println(1 << 0);
+        System.out.println(1 << 2);
+        System.out.println(1 << 3);
+        System.out.println("=================================");
+        // 针对二进制，只要有一个余数为0，就为0
+        System.out.println(1 & 4);
+        System.out.println(5 & 4);
+        System.out.println("=================================");
+        System.out.println(4 & ~4);
+        System.out.println("=================================");
+        System.out.println(1 | 4);
+        System.out.println(1 | 8);
+    }
+
 }
