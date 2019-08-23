@@ -11,6 +11,8 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -54,6 +56,7 @@ public class NIOSocketServer implements NIOBaseSocket {
         while (this.selector.select() > 0) {
             Set<SelectionKey> selectionKeySet = this.selector.selectedKeys();
             selectionKeySet.forEach(key -> {
+                System.out.println(">>>>>>>>>>" + LocalTime.now() + ": readops = " + key.readyOps() + " itops = " + key.interestOps());
                 try {
                     //测试该管道是否可以建立一个新的socket连接
                     if (key.isAcceptable()) {
@@ -73,15 +76,16 @@ public class NIOSocketServer implements NIOBaseSocket {
                                 e.printStackTrace();
                             }
                         });
+                        //取消写操作，这一步会导致 interestOps = 1 , readOps = 5
                         key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+                        //key 经过下一轮select 后变为只可读 interestOps = 1 , readOps = 1
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                System.out.println("<<<<<<<<<<<<<<<<" + LocalTime.now() + ": readops = " + key.readyOps() + " itops = " + key.interestOps());
                 selectionKeySet.remove(key);
             });
-
             i++;
         }
 
@@ -128,13 +132,11 @@ public class NIOSocketServer implements NIOBaseSocket {
     public void writeMsg(SelectionKey key) throws IOException {
         SocketChannel toClient = (SocketChannel) key.channel();
 
-        //String msg = "1";
         String msg = new Scanner(System.in).nextLine();
         this.writeBuffer = ByteBuffer.wrap(msg.getBytes());
         toClient.write(this.writeBuffer);
 
         this.writeBuffer.clear();
-        //toClient.register(this.selector, SelectionKey.OP_READ, this.writeBuffer);
     }
 
     public static void main(String[] args) throws IOException {
@@ -142,6 +144,5 @@ public class NIOSocketServer implements NIOBaseSocket {
         server.init("127.0.0.1", 8366);
         server.getNewMsg();
     }
-
 
 }

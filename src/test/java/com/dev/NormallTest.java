@@ -66,12 +66,15 @@ public class NormallTest {
         System.out.println(1 << 3);
         System.out.println("=================================");
         // 针对二进制，只要有一个余数为0，就为0
+        System.out.println(1 & 5);
+        System.out.println(5 & 1);
         System.out.println(1 & 4);
-        System.out.println(5 & 4);
+        System.out.println(4 & 1);
         System.out.println("=================================");
-        System.out.println(4 & ~4);
+        System.out.println(5 & ~5);
+        System.out.println(5 & ~4);
         System.out.println("=================================");
-        System.out.println(1 | 4);
+        System.out.println(5 | 4);
         System.out.println(1 | 8);
     }
 
