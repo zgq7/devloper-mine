@@ -17,6 +17,9 @@ public abstract class Pen {
      **/
     public abstract boolean canBeClean();
 
+    /**
+     * 写在某个载体上
+     **/
     public abstract void writeOn(Carrier carrier);
 
 }

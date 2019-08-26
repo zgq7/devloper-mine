@@ -48,15 +48,18 @@ public class GonPen extends Pen {
 
     @Override
     public void writeOn(Carrier carrier) {
+        if (this.writableLength == 0) {
+            PenFactory.recyclePen(this);
+        }
         if (carrier instanceof GlassCarrier) {
-            this.writableLength = writableLength - carrier.consume(this);
             this.canBeWrite = false;
-            this.canBeWrite = false;
+            this.canBeClean = true;
         }
         if (carrier instanceof PaperCarrier) {
             this.canBeWrite = true;
             this.canBeClean = false;
         }
+        this.writableLength = writableLength - carrier.consume(this);
     }
 
 

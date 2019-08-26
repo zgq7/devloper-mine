@@ -1,6 +1,7 @@
 package com.dev;
 
 import com.dev.config.LocalThreadPool;
+import com.dev.utils.sjms.*;
 import com.dev.utils.zpang.TestImpl01;
 import org.junit.Test;
 
@@ -76,6 +77,19 @@ public class NormallTest {
         System.out.println("=================================");
         System.out.println(5 | 4);
         System.out.println(1 | 8);
+    }
+
+    @Test
+    public void test04() {
+        GonPen gonPen = PenFactory.newGonPen();
+
+        System.out.println(gonPen.canBeClean() + "   " + gonPen.canBeWrite() + "   " + gonPen.getWritableLength());
+
+        gonPen.writeOn(new GlassCarrier());
+        System.out.println(gonPen.canBeClean() + "   " + gonPen.canBeWrite() + "   " + gonPen.getWritableLength());
+
+        gonPen.writeOn(new PaperCarrier());
+        System.out.println(gonPen.canBeClean() + "   " + gonPen.canBeWrite() + "   " + gonPen.getWritableLength());
     }
 
 }

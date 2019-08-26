@@ -48,6 +48,9 @@ public class PencilPen extends Pen {
 
     @Override
     public void writeOn(Carrier carrier) {
-        this.writableLength = writableLength - 1;
+        if (this.writableLength == 0) {
+            PenFactory.recyclePen(this);
+        }
+        this.writableLength = writableLength - carrier.consume(this);
     }
 }

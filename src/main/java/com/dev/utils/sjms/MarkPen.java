@@ -47,7 +47,10 @@ public class MarkPen extends Pen {
 
     @Override
     public void writeOn(Carrier carrier) {
-        this.writableLength = writableLength - 1;
+        if (this.writableLength == 0) {
+            PenFactory.recyclePen(this);
+        }
+
         if (carrier instanceof GlassCarrier) {
             this.canBeWrite = true;
             this.canBeWrite = true;
@@ -56,6 +59,7 @@ public class MarkPen extends Pen {
             this.canBeWrite = false;
             this.canBeClean = true;
         }
+        this.writableLength = writableLength - carrier.consume(this);
     }
 
 }
