@@ -1,4 +1,4 @@
-package com.dev.utils.webSocket;
+package com.dev.utils.websocket;
 
 /**
  * Created on 2019-08-12 14:47.

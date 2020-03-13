@@ -3,6 +3,12 @@ package com.dev.model;
 import javax.persistence.*;
 
 public class Aopi {
+
+    public Aopi(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
     /**
      * id
      */
@@ -74,9 +80,17 @@ public class Aopi {
         this.age = age;
     }
 
-    public Aopi(String name, Integer age) {
-        this.name = name;
-        this.age = age;
+    //====业务字段
+
+    @Transient
+    private String test;
+
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
     }
 
     @Override

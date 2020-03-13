@@ -1,9 +1,7 @@
-package com.dev.utils.webSocket;
+package com.dev.utils.websocket;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dev.config.LocalThreadPool;
-import com.dev.utils.time.TimeUtils;
-import org.apache.tomcat.websocket.WsSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import javax.websocket.server.ServerEndpoint;
  *
  * @author zgq7
  */
-@ServerEndpoint(value = "/ws/wserver")
+@ServerEndpoint(value = "/ws/wserver/{i}")
 public class SocketServer {
 
     private static Logger logger = LoggerFactory.getLogger(SocketServer.class);

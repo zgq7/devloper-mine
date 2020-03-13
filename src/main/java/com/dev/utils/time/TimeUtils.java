@@ -1,10 +1,6 @@
 package com.dev.utils.time;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 
 /**
@@ -104,6 +100,24 @@ public class TimeUtils {
     }
 
     /**
+     * 获取到本周的第一天
+     **/
+    public static LocalDate getFristDateOfWeek() {
+        return LocalDate.now().with(TemporalAdjusters.ofDateAdjuster(adjuster ->
+                adjuster.minusDays(adjuster.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue()))
+        );
+    }
+
+    /**
+     * 获取到本周的最后一天
+     **/
+    public static LocalDate getLastDateOfWeek() {
+        return LocalDate.now().with(TemporalAdjusters.ofDateAdjuster(adjuster ->
+                adjuster.plusDays(DayOfWeek.SUNDAY.getValue() - adjuster.getDayOfWeek().getValue()))
+        );
+    }
+
+    /**
      * localDatetime 转为 时间戳,精确到秒
      *
      * @param localDateTime
@@ -123,6 +137,26 @@ public class TimeUtils {
     public static Long TimeToStampsOfMills(LocalDateTime localDateTime) {
         //return Timestamp.valueOf(localDateTime).toInstant().toEpochMilli();
         return localDateTime.atZone(ZONE_ID).toInstant().toEpochMilli();
+    }
+
+    /**
+     * @return 时间戳转时间，精确到毫秒
+     * @author Leethea
+     * @Description
+     * @Date 2020/1/3 16:57
+     **/
+    public static LocalDateTime timeStampTotTimeMills(Long timeStamp) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timeStamp), ZONE_ID);
+    }
+
+    /**
+     * @return 时间戳转时间，精确到秒
+     * @author Leethea
+     * @Description
+     * @Date 2020/1/3 16:57
+     **/
+    public static LocalDateTime timeStampToTimeSeconds(Long timeStamp) {
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(timeStamp), ZONE_ID);
     }
 
 }

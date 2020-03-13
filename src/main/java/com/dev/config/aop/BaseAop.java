@@ -41,7 +41,8 @@ public class BaseAop {
      * @apiNote execution 路径中的 "." 如果是精确到类，则一个就行，如果是精确到包就得两个 "."
      * @apiNote execution 路径若只精确到包,就无法使用 before、after、afterReturuning、around 四个通知模块，启动会报错
      **/
-    @Pointcut("execution(public * com.dev.controller.TestController.s())")
+    //@Pointcut("execution(public * com.dev.controller.TestController.*(..))")
+    @Pointcut(value = "@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public void aspect() {
     }
 
@@ -50,6 +51,7 @@ public class BaseAop {
      **/
     @Before(value = "aspect()")
     public void before(JoinPoint joinPoint) {
+        Object[] result = joinPoint.getArgs();
         log.info("before ：参数类型：{}", joinPoint.getArgs());
     }
 

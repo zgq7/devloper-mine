@@ -1,5 +1,6 @@
 package com.dev.utils.email;
 
+import com.alibaba.nacos.spring.context.annotation.config.NacosRefresh;
 import com.dev.model.email.EmailModel;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

@@ -6,9 +6,6 @@
 <generatorConfiguration>
     <properties resource="mybatis-generator/db.properties"/>
 
-    <classPathEntry
-            location="D:\IntelljIdea\Maven3.5\localmaven\mysql\mysql-connector-java\8.0.16\mysql-connector-java-8.0.16.jar"/>
-
     <!-- MyBatis3Simple 不生成example的问题-->
     <context id="DB2Tables" targetRuntime="MyBatis3Simple" defaultModelType="flat">
         <!-- TKmybatis配置 -->
@@ -50,9 +47,9 @@
                              type="XMLMAPPER"/>
 
         <!--tableName 代表表名 domainObjectName代表实体名 schema指数据库结构-->
-        <table tableName="aopi" schema="Mysql" domainObjectName="Aopi">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        <table tableName="pms_test" schema="Mysql">
+            <!--<generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
         </table>
 
     </context>
-</generatorConfiguration>
+        </generatorConfiguration>

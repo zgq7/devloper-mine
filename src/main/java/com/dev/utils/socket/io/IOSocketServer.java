@@ -1,6 +1,5 @@
 package com.dev.utils.socket.io;
 
-import com.alibaba.fastjson.JSON;
 import com.dev.config.LocalThreadPool;
 import com.dev.utils.socket.MsgModel;
 import org.slf4j.Logger;

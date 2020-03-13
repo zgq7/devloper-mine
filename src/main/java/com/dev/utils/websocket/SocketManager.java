@@ -1,4 +1,4 @@
-package com.dev.utils.webSocket;
+package com.dev.utils.websocket;
 
 import javax.websocket.Session;
 import java.io.IOException;

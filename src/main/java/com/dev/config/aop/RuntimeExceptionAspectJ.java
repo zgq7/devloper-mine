@@ -44,11 +44,12 @@ public class RuntimeExceptionAspectJ {
         log.error("occured a [{}] , msg : [{}]", klass.getSimpleName(), ExceptionCodes.getMsgByKlass(klass));
         EmailModel emailModel = new EmailModel();
         emailModel.setEmailTheme("测试");
-        emailModel.setRecieverName("测试者");
+        emailModel.setRecieverName("陈祖欧");
         emailModel.setEmailContent(exception.toString() + ":\n" + Arrays.toString(exception.getStackTrace()));
-        //emailModel.setRecieverEmailAddress("3110320051@qq.com");
-        emailModel.setRecieverEmailAddress("1140661106@qq.com");
+        emailModel.setRecieverEmailAddress("1062406029@qq.com");
+        //同步发送
         //mailSendUtils.sendEmailAsSysExceptionHtml(emailModel);
+        //异步发送
         //localThreadPool.threadPoolExecutor.execute(() -> mailSendUtils.sendEmailAsSysExceptionHtml(emailModel));
         throw new ServiceException(ExceptionCodes.getCodeByKlass(klass), ExceptionCodes.getMsgByKlass(klass));
     }

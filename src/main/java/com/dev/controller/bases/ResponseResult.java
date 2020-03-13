@@ -14,18 +14,18 @@ public class ResponseResult<T> {
 
     private int code;
 
-    private List<T> data;
+    private T data;
 
     private String msg;
 
     public ResponseResult<T> emptys() {
         this.code = HttpStatus.OK.value();
-        this.data = Collections.EMPTY_LIST;
+        this.data = null;
         this.msg = HttpStatus.OK.getReasonPhrase();
         return this;
     }
 
-    public ResponseResult<T> success(List<T> data) {
+    public ResponseResult<T> success(T data) {
         this.code = HttpStatus.OK.value();
         this.data = data;
         this.msg = HttpStatus.OK.getReasonPhrase();
@@ -40,11 +40,11 @@ public class ResponseResult<T> {
         this.code = code;
     }
 
-    public List<T> getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(List<T> data) {
+    public void setData(T data) {
         this.data = data;
     }
 
