@@ -96,11 +96,11 @@
             <version>1.2.12</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper -->
-<!--        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <version>5.1.11</version>
-        </dependency>-->
+        <!--        <dependency>
+                    <groupId>com.github.pagehelper</groupId>
+                    <artifactId>pagehelper</artifactId>
+                    <version>5.1.11</version>
+                </dependency>-->
 
 
         <!-- spring boot AOP release start -->
@@ -138,13 +138,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.corundumstudio.socketio/netty-socketio -->
-        <dependency>
-            <groupId>com.corundumstudio.socketio</groupId>
-            <artifactId>netty-socketio</artifactId>
-            <version>1.7.17</version>
-        </dependency>
-
         <!-- Nacos -->
         <!-- https://mvnrepository.com/artifact/com.alibaba.boot/nacos-config-spring-boot-starter -->
         <dependency>
@@ -161,6 +154,25 @@
             <version>1.5.1</version>
         </dependency>
 
+        <!-- 爬虫 -->
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.13.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.belerweb/pinyin4j -->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
     </dependencies>
 

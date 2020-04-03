@@ -3,6 +3,7 @@ package com.dev;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.dev.config.LocalThreadPool;
+import com.dev.model.Aopi;
 import com.dev.utils.dxc.Dxc1;
 import com.dev.utils.dxc.Dxc2;
 import com.dev.utils.sjms.GlassCarrier;
@@ -10,11 +11,11 @@ import com.dev.utils.sjms.GonPen;
 import com.dev.utils.sjms.PaperCarrier;
 import com.dev.utils.sjms.PenFactory;
 import com.dev.utils.time.TimeUtils;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -244,6 +245,31 @@ public class NormallTest {
 		}
 	}
 
+	/**
+	 * 闭锁
+	 **/
+	@Test
+	public void test12() {
+		CountDownLatch latch = new CountDownLatch(2);
+		new Thread(() -> {
+			System.out.println(Thread.currentThread().getId());
+			latch.countDown();
+		}).start();
+
+		new Thread(() -> {
+			System.out.println(Thread.currentThread().getName());
+			latch.countDown();
+		}).start();
+
+		try {
+			latch.await();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("success");
+	}
+
 	@Test
 	public void doubleThread() {
 		LocalDate now = LocalDate.now();
@@ -400,7 +426,19 @@ public class NormallTest {
 
 	@Test
 	public void test19() {
-		System.out.println(ImmutableMap.of("k1",null));
+		Aopi aopi = new Aopi("123", 23);
+		System.out.println(JSON.toJSONString(aopi));
+		System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+	}
+
+	@Test
+	public void test20(){
+		List<String> s = new ArrayList<>();
+		s.add("1");
+		s.add("1");
+		s.add("1");
+		System.out.println(Arrays.toString(s.toArray()));
+		System.out.println(String.join(",",s));
 	}
 
 
