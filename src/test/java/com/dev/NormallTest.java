@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.dev.config.LocalThreadPool;
 import com.dev.model.Aopi;
+import com.dev.service.TestService;
+import com.dev.service.TestServiceLamdba;
 import com.dev.utils.dxc.Dxc1;
 import com.dev.utils.dxc.Dxc2;
 import com.dev.utils.sjms.GlassCarrier;
@@ -11,11 +13,20 @@ import com.dev.utils.sjms.GonPen;
 import com.dev.utils.sjms.PaperCarrier;
 import com.dev.utils.sjms.PenFactory;
 import com.dev.utils.time.TimeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -432,13 +443,108 @@ public class NormallTest {
 	}
 
 	@Test
-	public void test20(){
-		List<String> s = new ArrayList<>();
-		s.add("1");
-		s.add("1");
-		s.add("1");
-		System.out.println(Arrays.toString(s.toArray()));
-		System.out.println(String.join(",",s));
+	public void test20() {
+		Date date = new Date();
+		LocalDate localDate = LocalDate.now();
+
+		System.out.println(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfWeek().getValue());
+		System.out.println(localDate.getDayOfWeek().getValue());
+	}
+
+	@Test
+	public void test21() {
+		List<Integer> ass = new ArrayList<>();
+		ass.add(8);
+		ass.add(3);
+		ass.add(7);
+		ass.add(2);
+		List<Integer> ass2 = new ArrayList<>();
+		ass2.add(5);
+		ass2.add(6);
+
+		ass.sort(Comparator.comparing(Integer::intValue));
+		System.out.println(ass);
+		for (Integer i : ass2) {
+			List<Integer> bit = new ArrayList<>();
+			boolean t = false;
+			for (Integer d : ass) {
+				if (d > i && !t) {
+					bit.add(i);
+					t = true;
+				}
+				bit.add(d);
+			}
+			ass = bit;
+		}
+		System.out.println(ass);
+	}
+
+	/**
+	 * IP 测试
+	 **/
+	@Test
+	public void test22() throws UnknownHostException {
+		InetAddress address1 = Inet4Address.getLocalHost();
+		InetAddress address2 = Inet6Address.getLocalHost();
+
+		System.out.println(address1);
+		System.out.println(address2);
+
+	}
+
+	@Test
+	public void test23() {
+		String s = "1,3,5";
+		StringBuilder sb = new StringBuilder();
+		Arrays.asList(StringUtils.split(s, ",")).forEach(t -> {
+			sb.append(t)
+					.append(",");
+		});
+		System.out.println(sb);
+		System.out.println(sb.length());
+		System.out.println(sb.substring(0, s.length()));
+	}
+
+	@Test
+	public void test24() {
+		final LocalDate now = LocalDate.now();
+		final LocalDate birth = LocalDate.of(2017, 1, 1);
+		Period p = Period.between(birth, now);
+		long months = p.getYears() * 12 + p.getMonths();
+		if (p.getDays() > 0) {
+			months++;
+		}
+		System.out.println(months);
+	}
+
+	@Test
+	public void test25() {
+		Date date1 = new Date(2020, 1, 1, 14, 20, 10);
+		Date date2 = new Date(2020, 1, 1, 15, 20, 11);
+		long hour = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60);
+		long hour1 = (date2.getTime() - date1.getTime()) % (1000 * 60 * 60);
+		System.out.println(hour);
+		System.out.println(hour1);
+	}
+
+	@Test
+	public void test26() {
+		Date date = new Date();
+		Date date2 = Date.from(LocalDate.of(2020, 11, 7).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/M/d");
+		System.out.println(simpleDateFormat.format(date));
+		System.out.println(simpleDateFormat.format(date2));
+	}
+
+	@Test
+	public void test27() {
+		TestServiceLamdba testServiceLamdba = new TestServiceLamdba();
+		System.out.println(testServiceLamdba.sayname("贺江立1", (name) -> "hi：" + name));
+	}
+
+	@Test
+	public void test28() {
+		System.out.println(true || false);
 	}
 
 

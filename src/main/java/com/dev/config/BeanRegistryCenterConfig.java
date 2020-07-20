@@ -1,13 +1,11 @@
 package com.dev.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.dev.config.aop.BaseAop;
 import com.dev.config.aop.RuntimeExceptionAspectJ;
 import com.dev.filter.BaseFilter;
 import com.dev.utils.email.MailSendUtils;
 import com.dev.utils.websocket.SocketManager;
 import com.dev.utils.websocket.SocketServer;
-import com.github.pagehelper.PageHelper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
