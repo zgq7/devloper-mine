@@ -544,7 +544,14 @@ public class NormallTest {
 
 	@Test
 	public void test28() {
-		System.out.println(true || false);
+		System.out.println( 3 & 9);
+
+		ConcurrentHashMap<String,String> crp = new ConcurrentHashMap<>();
+		crp.put("a","acv");
+
+		LinkedHashMap<String,String> lkp  = new LinkedHashMap<>();
+		lkp.put("lkp","lkp");
+
 	}
 
 
