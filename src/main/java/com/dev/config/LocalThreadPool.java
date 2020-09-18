@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -83,6 +84,7 @@ public class LocalThreadPool implements InitializingBean, DisposableBean {
 	 * @param exceptionHandler 线程内部异常处理器
 	 *                         使用本地线程池执行任务
 	 **/
+	@Scheduled
 	public void execute(final String name, final Runnable runnable, final Thread.UncaughtExceptionHandler exceptionHandler) {
 		threadPoolExecutor.execute(() -> {
 			final Thread currentThread = Thread.currentThread();
