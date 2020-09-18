@@ -8,47 +8,23 @@ import java.util.concurrent.CountDownLatch;
  * @author zgq7
  */
 public class DxcTest {
+    private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
 
-    public static void main(String[] args) {
-        //等待两个线程
-        CountDownLatch countDownLatch = new CountDownLatch(2);
-        Thread t1 = new Thread(()->{
-            hello();
-            countDownLatch.countDown();
-        });
-        Thread t2 = new Thread(() -> {
-            try {
-                Thread.sleep(3000);
-                hi();
-                countDownLatch.countDown();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        Thread t3 = new Thread(DxcTest::over);
-
-        t1.start();
-        t2.start();
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        over();
-
+    public static void set() {
+        threadLocal.set(1L);
     }
 
-    public static void hello() {
-        System.out.println("hello");
+    public static long get() {
+        return threadLocal.get();
     }
 
-    public static void hi() {
-        System.out.println("hi");
-    }
-
-    public static void over() {
-        System.out.println("over");
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(() -> {
+            set();
+            System.out.println(get());
+        }).start();
+        // 目的就是为了让子线程先运行完
+        Thread.sleep(100);
+        System.out.println(get());
     }
 }

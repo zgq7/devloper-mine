@@ -1,6 +1,7 @@
-package com.dev;
+package com.dev.boot;
 
 import com.alibaba.fastjson.JSON;
+import com.dev.DevloperMineApplication;
 import com.dev.config.LocalThreadPool;
 import com.dev.mapper.base.BaseRepositry;
 import com.dev.mapper.mappers.AopiMapper;
@@ -24,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -34,13 +34,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = DevloperMineApplication.class)
-public class DevloperMineApplicationTests {
+//@SpringBootTest
+public class ApplicationTests {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
