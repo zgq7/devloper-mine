@@ -15,6 +15,8 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Time;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -189,6 +191,12 @@ public class NormallTest {
                 }
             }, String.valueOf(i)).start();
         }
+
+        try {
+            TimeUnit.SECONDS.sleep(6);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -196,13 +204,13 @@ public class NormallTest {
      **/
     @Test
     public void test10() {
-        Thread main = Thread.currentThread();
         Semaphore semaphore = new Semaphore(3);//三个资源，公平锁
 
         //6线程抢占三个资源
         int p = 0;
         for (int i = 1; i < 7; i++) {
             new Thread(() -> {
+                System.out.println("");
                 try {
                     semaphore.acquire();//抢占资源
                     System.out.println(Thread.currentThread().getName() + "抢到资源");
@@ -218,8 +226,10 @@ public class NormallTest {
             p++;
         }
 
-        while (p != 6) {
-
+        try {
+            TimeUnit.SECONDS.sleep(6);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -605,6 +615,27 @@ public class NormallTest {
         }
         System.out.println(abs);
 
+    }
+
+    @Test
+    public void test34() {
+        String key = "whitelist:import:progress:{appId}:{whiteListSno}";
+        key = key.replaceAll("\\{[appId}]*\\}", "001");
+        key = key.replaceAll("\\{[whiteListSno}]*\\}", "001");
+
+        System.out.println(key);
+    }
+
+    @Test
+    public void test35() {
+        int count = 10000;
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setGroupingUsed(false);
+        numberFormat.setMaximumIntegerDigits(4);
+        numberFormat.setMinimumIntegerDigits(4);
+        String newWhiteListSno = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + numberFormat.format(count);
+
+        System.out.println(newWhiteListSno);
     }
 
 }

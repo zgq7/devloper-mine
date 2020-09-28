@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date 2020/9/14 9:56
  * @description
  **/
-public class CustomerThreadManager {
+public class CustomerThreadPoolManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerThreadManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerThreadPoolManager.class);
 
     private static final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5,
             10,
