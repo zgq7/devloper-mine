@@ -24,10 +24,11 @@ public class CustomerThreadPoolManager {
             new ThreadPoolExecutor.CallerRunsPolicy());
 
 
-    private static void execute(Runnable runnable, AtomicInteger retrytimes) {
+    public static void execute(Runnable runnable, AtomicInteger retrytimes) {
         if (retrytimes.get() > 0) {
             CompletableFuture<Void> future = CompletableFuture.runAsync(runnable, threadPoolExecutor);
             future.exceptionally(e -> {
+                e.printStackTrace();
                 retrytimes.decrementAndGet();
                 execute(runnable, retrytimes);
                 return null;
@@ -35,7 +36,7 @@ public class CustomerThreadPoolManager {
         }
     }
 
-    private static void execute(Runnable runnable) {
+    public static void execute(Runnable runnable) {
         execute(runnable, new AtomicInteger(3));
     }
 
@@ -46,15 +47,6 @@ public class CustomerThreadPoolManager {
             throw new RuntimeException();
         });
 
-        for (int i = 0; i < 5; i++) {
-            execute(() -> logger.info("success"));
-        }
-
-        try {
-            threadPoolExecutor.awaitTermination(30,TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
 }

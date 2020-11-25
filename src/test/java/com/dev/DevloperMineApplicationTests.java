@@ -1,6 +1,7 @@
 package com.dev;
 
 import com.alibaba.fastjson.JSON;
+import com.dev.config.CustomerThreadPoolManager;
 import com.dev.config.LocalThreadPool;
 import com.dev.mapper.base.BaseRepositry;
 import com.dev.mapper.mappers.AopiMapper;
@@ -312,9 +313,9 @@ public class DevloperMineApplicationTests {
 
     @Test
     public void test24() {
-        localThreadPool.execute(() -> aopiService.insertPmsList());
-        logger.info("获取。。");
-        logger.info("{}", pmsTestMapper.selectAll());
+        CustomerThreadPoolManager.execute(() ->{
+            throw new RuntimeException("error");
+        });
     }
 
 }

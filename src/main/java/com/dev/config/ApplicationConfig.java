@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * @author Leethea_廖南洲
+ * @author zgq7
  * @version 1.0
  * @date 2020/4/14 11:06
  **/
-@Component
+//@Component
 public class ApplicationConfig implements ApplicationListener<ApplicationStartedEvent>, InitializingBean, ApplicationContextAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
