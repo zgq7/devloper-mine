@@ -1,7 +1,0 @@
-2019-07-11 09:31:33.791 INFO       [ main ] com.dev.DevloperMineApplicationTests               ->   50 ： Starting DevloperMineApplicationTests on PC-20181016FVVR with PID 7664 (started by Administrator in D:\IntelliJWorkSp\devloper-mine) 
-2019-07-11 09:31:33.792 INFO       [ main ] com.dev.DevloperMineApplicationTests               ->  675 ： No active profile set, falling back to default profiles: default 
-2019-07-11 09:31:35.287 INFO       [ main ] com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure ->   56 ： Init DruidDataSource 
-2019-07-11 09:31:35.528 INFO       [ main ] com.alibaba.druid.pool.DruidDataSource             -> 1003 ： {dataSource-1} inited 
-2019-07-11 09:31:37.204 INFO       [ main ] com.dev.DevloperMineApplicationTests               ->   59 ： Started DevloperMineApplicationTests in 3.99 seconds (JVM running for 5.107) 
-2019-07-11 09:31:38.053 INFO       [ Thread-2 ] com.alibaba.druid.pool.DruidDataSource             -> 1948 ： {dataSource-1} closing ... 
-2019-07-11 09:31:38.068 INFO       [ Thread-2 ] com.alibaba.druid.pool.DruidDataSource             -> 2020 ： {dataSource-1} closed 
