@@ -78,7 +78,7 @@ public class ProductOnlineBus {
                     e.printStackTrace();
                 }
             }
-        }, "milkThread").start();
+        }, "MilkThread").start();
 
         new Thread(() -> {
             int len = prodNum * fjjMultiple;
@@ -90,7 +90,7 @@ public class ProductOnlineBus {
                     e.printStackTrace();
                 }
             }
-        }, "fjjThread").start();
+        }, "FJJThread").start();
 
         new Thread(() -> {
             for (int i = 0; i < prodNum; i++) {
@@ -107,7 +107,7 @@ public class ProductOnlineBus {
                     e.printStackTrace();
                 }
             }
-        }, "cheeseThread").start();
+        }, "CheeseThread").start();
 
         new Thread(() -> {
             while (trucked.get() < needTruckTimes) {
@@ -122,7 +122,7 @@ public class ProductOnlineBus {
             }
             logger.info("over of->cheese:[{}],milk:[{}],fjj[{}],truck:[{}]",
                     cheeseProded.get(), milkProded.get(), fjjProded.get(), trucked.get());
-        }, "truckThread").start();
+        }, "TruckThread").start();
     }
 
     /**

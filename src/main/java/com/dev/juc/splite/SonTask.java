@@ -1,4 +1,4 @@
-package com.dev.juc.broadcast;
+package com.dev.juc.splite;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +17,22 @@ public class SonTask extends RecursiveAction {
 
     private static final Logger logger = LoggerFactory.getLogger(SonTask.class);
 
-    //总共任务量
-    private int taskCount;
-    //分配的任务量
-    private int taskMete;
-    //任务排名
+    /**
+     * 总共任务量
+     **/
+    private final int taskCount;
+    /**
+     * 当前task被分配的任务量
+     **/
+    private final int taskMete;
+    /**
+     * 当前task序号
+     **/
     private int taskRank;
-    //最大可处理任务量
-    private final int MAX_RANK = 1;
+    /**
+     * 每个task最大可处理任务量
+     **/
+    private final int maxTask = 1;
 
     public SonTask(int taskCount) {
         this.taskCount = taskCount;
@@ -39,28 +47,37 @@ public class SonTask extends RecursiveAction {
 
     @Override
     protected void compute() {
-        if (taskMete == MAX_RANK) {
+        // 任务分配量是否满足处理条件，不满足则将任务再拆分
+        if (taskMete == maxTask) {
             printSelf();
         } else {
             List<SonTask> sonTaskList = new ArrayList<>();
             for (int i = 1; i <= taskCount; i++) {
                 sonTaskList.add(new SonTask(taskCount, 1, i));
             }
+            // 执行所有任务
             invokeAll(sonTaskList);
         }
     }
 
+    /**
+     * task 1 正常结束 ->
+     * task 2 执行报错 ->
+     * task 3 直接终止
+     **/
     private void printSelf() {
-        logger.info("son task rank -> [{}]", taskRank);
+        logger.info("SON TASK RANK [{}] START", taskRank);
         try {
             TimeUnit.SECONDS.sleep(taskRank * 3);
+            if (taskRank == 2) {
+                logger.error("eroor occured");
+                throw new RuntimeException("error");
+            } else {
+                logger.info("TASK [{}] OVER", taskRank);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (taskRank == 2) {
-            throw new RuntimeException("error");
-        }
-        logger.info("TASK [{}] OVER", taskRank);
     }
 
 }

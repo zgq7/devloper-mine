@@ -8,7 +8,7 @@ package com.dev.juc.assemnbly;
 public class StartMain {
 
      public static void main(String[] args) {
-        ProductOnlineBus pb = new ProductOnlineBus(99900);
+        ProductOnlineBus pb = new ProductOnlineBus(100000);
         pb.starter();
     }
 }
