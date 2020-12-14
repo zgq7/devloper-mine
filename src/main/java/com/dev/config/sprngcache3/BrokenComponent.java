@@ -10,7 +10,7 @@ import javax.annotation.Resource;
  * @date 2020-11-19 16:06
  * @description 相当于 controller
  */
-@Component
+//@Component
 public class BrokenComponent  {
 
     //@Resource
