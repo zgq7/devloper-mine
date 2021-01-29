@@ -6,6 +6,7 @@ import com.dev.config.LocalThreadPool;
 import com.dev.model.Aopi;
 import com.dev.service.TestServiceLamdba;
 import com.dev.utils.time.TimeUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -608,11 +609,8 @@ public class NormallTest {
                 abs.remove(abs.get(i));
         }
 
-        for (Integer a : abs) {
-            if (a.equals(4))
-                abs.remove(a);
-            //abs.add(5);
-        }
+        //abs.add(5);
+        abs.removeIf(a -> a.equals(4));
         System.out.println(abs);
 
     }
@@ -636,6 +634,26 @@ public class NormallTest {
         String newWhiteListSno = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + numberFormat.format(count);
 
         System.out.println(newWhiteListSno);
+    }
+
+    @Test
+    public void fileTest() {
+        System.out.println(FilenameUtils.getExtension("D:\\idea_workspace\\devloper-mine\\aopi.sql"));
+    }
+
+    @Test
+    public void fileTest2() {
+        File file = new File("D:\\data\\kol\\test");
+        if (!file.exists()){
+            file.mkdirs();
+        }
+
+        try (OutputStream outputStream = new FileOutputStream("D:\\data\\kol\\test\\test.xls")) {
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

@@ -308,7 +308,10 @@ public class DevloperMineApplicationTests {
 
     @Test
     public void mapperTest() {
-        logger.info("{}", pmsTestMapper.selectByIds(String.join(",", Arrays.asList("1", "2"))));
+        Aopi aopi = new Aopi();
+        aopi.setId(2);
+        aopi = aopiMapper.selectOne(aopi);
+        System.out.println(aopi);
     }
 
     @Test

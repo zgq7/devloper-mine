@@ -9,6 +9,10 @@ public class Aopi {
         this.age = age;
     }
 
+
+    public Aopi() {
+    }
+
     /**
      * id
      */
