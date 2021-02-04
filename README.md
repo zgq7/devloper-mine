@@ -2,7 +2,6 @@
 个人学习笔记
 
 ### 1：SpringBoot + MyabtisGenerator + tk.mybatis
-
 blog：[https://www.cnblogs.com/zgq7/p/11084161.html](https://www.cnblogs.com/zgq7/p/11084161.html)
 
 ### 2：SpringBoot + PageHelper
@@ -12,14 +11,12 @@ what I learned:
   2：PageHelper 拼接 sql
 ```
 ### 3：SpringBoot + QQMAIL/TencentMail
-```diff
 blog：https://www.cnblogs.com/zgq7/p/11314895.html
-```
+
 ### 4：SpringBoot AOP learning
-```diff
 blog：https://www.cnblogs.com/zgq7/p/11314895.html
 blog：https://www.cnblogs.com/zgq7/p/11310776.html
-```
+
 ### 5：SpringBoot ExceptionHandler
 
 ### 6：基于Java 的网页爬虫
@@ -45,6 +42,5 @@ blog：https://www.cnblogs.com/zgq7/p/11310776.html
   3：ThreadPoolExecutor、ExecuteService、Executors ...
 ```
 ### 精力有限，预计不再新增元素...
-```diff
 更多好玩的内容请移步至：https://github.com/zgq7/boot_collections
-```
+
