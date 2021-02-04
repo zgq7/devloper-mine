@@ -2,9 +2,9 @@
 个人学习笔记
 
 ### 1：SpringBoot + MyabtisGenerator + tk.mybatis
-```diff
+
 blog：[https://www.cnblogs.com/zgq7/p/11084161.html](https://www.cnblogs.com/zgq7/p/11084161.html)
-```
+
 ### 2：SpringBoot + PageHelper
 ```diff
 what I learned:
