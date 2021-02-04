@@ -2,7 +2,7 @@
 个人学习笔记
 
 ### 1：SpringBoot + MyabtisGenerator + tk.mybatis
-blog：[https://www.cnblogs.com/zgq7/p/11084161.html](https://www.cnblogs.com/zgq7/p/11084161.html)
+blog：https://www.cnblogs.com/zgq7/p/11084161.html
 
 ### 2：SpringBoot + PageHelper
 ```diff
@@ -29,9 +29,9 @@ blog：https://www.cnblogs.com/zgq7/p/11310776.html
   
   3：为什么我在工作中不使用它
 ```
-### 8：SpringBoot 集成 Nacos/Apollo 配置中心
+### 8：SpringBoot + Nacos/Apollo
 
-### 9：SpringBoot 集成 Quartz(新开分支测试，已删)
+### 9：SpringBoot + Quartz
 ```diff  
   1：最大的收获就是Quartz的上下文无法访问Spring的IOC容器获取bean，只能通过ApplicationContext 来获取容器中的Bean
 ```
@@ -41,6 +41,7 @@ blog：https://www.cnblogs.com/zgq7/p/11310776.html
   2：volatile、AtomicReference
   3：ThreadPoolExecutor、ExecuteService、Executors ...
 ```
-### 精力有限，预计不再新增元素...
+
+精力有限，预计不再新增元素...
 更多好玩的内容请移步至：https://github.com/zgq7/boot_collections
 
