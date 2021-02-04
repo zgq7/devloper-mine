@@ -2,21 +2,21 @@
 个人学习笔记
 
 ### 1：SpringBoot + MyabtisGenerator + tk.mybatis
-blog：https://www.cnblogs.com/zgq7/p/11084161.html
+   blog：https://www.cnblogs.com/zgq7/p/11084161.html
 
 ### 2：SpringBoot + PageHelper
 ```diff
-what I learned:
-  1：PageHelper 基于 threadLocal
-  2：PageHelper 拼接 sql
+  what I learned:
+    1：PageHelper 基于 threadLocal
+    2：PageHelper 拼接 sql
 ```
 ### 3：SpringBoot + QQMAIL/TencentMail
-blog：https://www.cnblogs.com/zgq7/p/11314895.html
+  blog：https://www.cnblogs.com/zgq7/p/11314895.html
 
 ### 4：SpringBoot AOP learning
-blog：https://www.cnblogs.com/zgq7/p/11314895.html
+  blog：https://www.cnblogs.com/zgq7/p/11314895.html
 
-blog：https://www.cnblogs.com/zgq7/p/11310776.html
+  blog：https://www.cnblogs.com/zgq7/p/11310776.html
 
 ### 5：SpringBoot ExceptionHandler
 
