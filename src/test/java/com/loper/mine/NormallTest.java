@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -643,7 +645,7 @@ public class NormallTest {
     @Test
     public void fileTest2() {
         File file = new File("D:\\data\\kol\\test");
-        if (!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
 
@@ -652,6 +654,19 @@ public class NormallTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Test
+    public void dateTest() {
+        LocalDate localDate1 = LocalDate.of(2020,1,1);
+        LocalDate localDate2 = LocalDate.of(2020,7,1);
+
+        Date dt = TimeUtils.parseDate(localDate1);
+        Date dp = TimeUtils.parseDate(localDate2);
+
+        long days = localDate1.until(localDate2, ChronoUnit.DAYS);
+        System.out.println(days);
 
     }
 

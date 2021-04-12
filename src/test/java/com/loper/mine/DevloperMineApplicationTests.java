@@ -1,7 +1,6 @@
 package com.loper.mine;
 
 import com.alibaba.fastjson.JSON;
-import com.dev.config.CustomerThreadPoolManager;
 import com.loper.mine.config.LocalThreadPool;
 import com.loper.mine.mapper.base.BaseRepositry;
 import com.loper.mine.mapper.mappers.AopiMapper;
@@ -312,11 +311,5 @@ public class DevloperMineApplicationTests {
         System.out.println(aopi);
     }
 
-    @Test
-    public void test24() {
-        CustomerThreadPoolManager.execute(() ->{
-            throw new RuntimeException("error");
-        });
-    }
 
 }

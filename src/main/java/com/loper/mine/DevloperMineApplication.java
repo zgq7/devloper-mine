@@ -13,7 +13,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @Date 2019/12/31 16:30
  **/
 @SpringBootApplication(exclude = QuartzAutoConfiguration.class)
-@MapperScan(value = "com.dev.mapper.mappers")
+@MapperScan(value = "com.loper.mine.mapper.mappers")
 //@NacosPropertySource(dataId = "devloper-mine", autoRefreshed = true)
 public class DevloperMineApplication {
 

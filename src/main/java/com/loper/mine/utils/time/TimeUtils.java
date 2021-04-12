@@ -2,6 +2,7 @@ package com.loper.mine.utils.time;
 
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 
 /**
  * Created on 2019-07-30 10:52.
@@ -157,6 +158,14 @@ public class TimeUtils {
      **/
     public static LocalDateTime timeStampToTimeSeconds(Long timeStamp) {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(timeStamp), ZONE_ID);
+    }
+
+    public static LocalDate parseLocalDate(Date date){
+        return date.toInstant().atZone(ZONE_ID).toLocalDate();
+    }
+
+    public static Date parseDate(LocalDate localDate){
+        return Date.from(localDate.atStartOfDay().atZone(ZONE_ID).toInstant());
     }
 
 }
