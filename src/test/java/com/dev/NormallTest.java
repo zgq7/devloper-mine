@@ -607,4 +607,22 @@ public class NormallTest {
 
     }
 
+    @Test
+    public void sadasdsa() {
+        ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<>();
+        concurrentHashMap.put("1", "1");
+        concurrentHashMap.remove("1");
+        System.out.println(concurrentHashMap);
+    }
+
+    @Test
+    public void asdsa() {
+
+        for (int i = 0, j = 2; ; ) {
+            System.out.println(j);
+
+            j=3;
+        }
+    }
+
 }

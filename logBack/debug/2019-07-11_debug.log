@@ -1,7 +1,0 @@
-2019-07-11 09:31:34.773 DEBUG [ main ] org.apache.ibatis.logging.LogFactory               ->  105 ： Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter. 
-2019-07-11 09:31:37.964 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： ==>  Preparing: SELECT count(0) FROM aopi  
-2019-07-11 09:31:37.994 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： ==> Parameters:  
-2019-07-11 09:31:38.037 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll_COUNT  ->  143 ： <==      Total: 1 
-2019-07-11 09:31:38.041 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==>  Preparing: SELECT id, name, age FROM aopi order by id LIMIT ?  
-2019-07-11 09:31:38.042 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： ==> Parameters: 10(Integer) 
-2019-07-11 09:31:38.044 DEBUG [ main ] com.dev.mapper.mappers.AopiMapper.selectAll        ->  143 ： <==      Total: 5 
