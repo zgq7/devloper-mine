@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 
@@ -309,6 +309,21 @@ public class DevloperMineApplicationTests {
         aopi.setId(2);
         aopi = aopiMapper.selectOne(aopi);
         System.out.println(aopi);
+    }
+
+    @Test
+    public void subl() {
+        Future<Void> future = localThreadPool.submit(() -> {
+            logger.error("...");
+            TimeUnit.SECONDS.sleep(1);
+            return null;
+        });
+
+        try {
+            future.get(3000, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
