@@ -24,7 +24,6 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -116,15 +115,20 @@ public class NormallTest {
      * 快速排序
      **/
     @Test
-    public void test061() {
+    public void quickSortTest() {
         int[] test = new int[]{5, 8, 4, 1, 6, 3, 7, 9, 10, 11};
-        test06(test, 0, 8);
-        for (int p = 0; p < test.length; p++) {
-            System.out.print(test[p] + ",");
+        quickSort(test, 0, 8);
+        for (int i : test) {
+            System.out.print(i + ",");
         }
+        int index = erFenSearch(test, 100);
+        System.out.println(index);
     }
 
-    private void test06(int[] test, int low, int high) {
+    /**
+     * 快速排序
+     **/
+    private void quickSort(int[] test, int low, int high) {
         if (low > high)
             return;
 
@@ -146,8 +150,32 @@ public class NormallTest {
         }
         test[low] = test[i];
         test[i] = temp;
-        test06(test, low, j - 1);
-        test06(test, j + 1, high);
+        quickSort(test, low, j - 1);
+        quickSort(test, j + 1, high);
+    }
+
+    /**
+     * 二分查找
+     */
+    private int erFenSearch(int[] arr, int data) {
+        // 起始位
+        int low = 0;
+        // 结束位
+        int high = arr.length - 1;
+        // 中位
+        int mid;
+
+        while (low <= high) {
+            mid = (low + high) / 2;
+            if (arr[mid] == data) {
+                return mid;
+            } else if (arr[mid] < data) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -155,8 +183,8 @@ public class NormallTest {
      **/
     @Test
     public void test07() throws InterruptedException {
-        ThreadLocal<Integer> threadLocal = new ThreadLocal();
-        ThreadLocal<String> threadLocal1 = new ThreadLocal();
+        ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
+        ThreadLocal<String> threadLocal1 = new ThreadLocal<>();
 
         Thread thread1 = new Thread(() -> {
             threadLocal.set(1);
@@ -659,8 +687,8 @@ public class NormallTest {
 
     @Test
     public void dateTest() {
-        LocalDate localDate1 = LocalDate.of(2020,1,1);
-        LocalDate localDate2 = LocalDate.of(2020,7,1);
+        LocalDate localDate1 = LocalDate.of(2020, 1, 1);
+        LocalDate localDate2 = LocalDate.of(2020, 7, 1);
 
         Date dt = TimeUtils.parseDate(localDate1);
         Date dp = TimeUtils.parseDate(localDate2);

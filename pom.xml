@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- MyBatis Generator -->
         <!-- Java接口和实体类 -->
@@ -31,6 +33,7 @@
         <persistence.version>1.0.2</persistence.version>
         <mapper.plugin>tk.mybatis.mapper.generator.MapperPlugin</mapper.plugin>
         <mapper.Mapper>tk.mybatis.mapper.common.Mapper</mapper.Mapper>
+
     </properties>
 
     <dependencies>
@@ -178,11 +181,22 @@
 
     <build>
         <plugins>
+            <!-- 解决打包后启动报错：“没有主清单属性” -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>true</fork>
+                </configuration>
+            </plugin>
+            <!-- 防止打包产生的文件出现中文乱码 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
 
@@ -229,14 +243,11 @@
             <properties>
                 <spring.profiles>dev</spring.profiles>
             </properties>
-            <!--            <activation>
-                            <activeByDefault>true</activeByDefault>
-                        </activation>-->
         </profile>
         <profile>
-            <id>apollo</id>
+            <id>prod</id>
             <properties>
-                <spring.profiles>apollo</spring.profiles>
+                <spring.profiles>prod</spring.profiles>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
