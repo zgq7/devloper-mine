@@ -4,8 +4,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author liaonanzhou
@@ -71,7 +70,44 @@ public class JUCTest {
 
 
     @Test
-    public void jucTest02() {
+    public void jucTest02() throws InterruptedException {
+        int cap = 10;
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(cap, cap, 300, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
+        CountDownLatch latch = new CountDownLatch(2);
+        Semaphore semaphore = new Semaphore(0);
+
+        executor.execute(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+                semaphore.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }finally {
+                latch.countDown();
+            }
+        });
+
+        executor.execute(() -> {
+            try {
+                while (true){
+                    boolean ack = semaphore.tryAcquire();
+                    if (ack){
+                        System.out.println("acked...");
+                        break;
+                    }else {
+                        System.out.println("...");
+                        TimeUnit.SECONDS.sleep(1);
+                    }
+                }
+            }catch (Exception ignore){
+
+            }finally {
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+        executor.shutdown();
 
     }
 

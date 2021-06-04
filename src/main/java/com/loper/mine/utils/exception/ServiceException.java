@@ -20,6 +20,7 @@ public class ServiceException extends RuntimeException implements Serializable {
     }
 
     public ServiceException(String msg) {
+        super(msg);
         this.msg = msg;
     }
 

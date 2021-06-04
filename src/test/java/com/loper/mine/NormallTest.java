@@ -3,8 +3,10 @@ package com.loper.mine;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.loper.mine.config.LocalThreadPool;
+import com.loper.mine.controller.dto.LoginDto;
 import com.loper.mine.model.Aopi;
 import com.loper.mine.service.TestServiceLamdba;
+import com.loper.mine.utils.JSRValidatorUtil;
 import com.loper.mine.utils.time.TimeUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -696,6 +698,15 @@ public class NormallTest {
         long days = localDate1.until(localDate2, ChronoUnit.DAYS);
         System.out.println(days);
 
+    }
+
+    @Test
+    public void validateTest() {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setUsername("123456");
+        loginDto.setPassword("12345678");
+
+        JSRValidatorUtil.validate(loginDto);
     }
 
 }

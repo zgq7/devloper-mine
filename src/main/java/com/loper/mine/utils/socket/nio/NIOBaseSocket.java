@@ -20,7 +20,7 @@ public interface NIOBaseSocket {
     /**
      * 轮询是否有新消息
      **/
-    void getNewMsg() throws IOException;
+    void polling() throws IOException;
 
     /**
      * 建立新的管道连接

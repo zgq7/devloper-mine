@@ -61,7 +61,8 @@ public class IOSocketServer {
             e.printStackTrace();
         } finally {
             try {
-                serverSocket.close();
+                if (serverSocket != null)
+                    serverSocket.close();
             } catch (IOException e) {
                 logger.error("服务器关闭失败");
             }
