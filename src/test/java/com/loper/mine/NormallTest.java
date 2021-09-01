@@ -5,7 +5,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.loper.mine.config.LocalThreadPool;
 import com.loper.mine.controller.dto.LoginDto;
 import com.loper.mine.model.Aopi;
-import com.loper.mine.service.TestServiceLamdba;
 import com.loper.mine.utils.JSRValidatorUtil;
 import com.loper.mine.utils.time.TimeUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -269,25 +268,21 @@ public class NormallTest {
      * 闭锁
      **/
     @Test
-    public void test12() {
+    public void test12() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(2);
-        new Thread(() -> {
-            System.out.println(Thread.currentThread().getId());
-            latch.countDown();
-        }).start();
+        for (int i = 0; i < 2; i++) {
+            new Thread(() -> {
+                try {
+                    System.out.println(Thread.currentThread().getId());
+                } catch (Exception ignore) {
 
-        new Thread(() -> {
-            System.out.println(Thread.currentThread().getName());
-            latch.countDown();
-        }).start();
-
-        try {
-            latch.await();
-        } catch (Exception e) {
-            e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            }).start();
         }
 
-        System.out.println("success");
+        latch.await();
     }
 
     @Test
@@ -546,12 +541,6 @@ public class NormallTest {
     }
 
     @Test
-    public void test27() {
-        TestServiceLamdba testServiceLamdba = new TestServiceLamdba();
-        System.out.println(testServiceLamdba.sayname("贺江立1", (name) -> "hi：" + name));
-    }
-
-    @Test
     public void test28() {
         System.out.println(3 & 9);
 
@@ -707,6 +696,32 @@ public class NormallTest {
         loginDto.setPassword("12345678");
 
         JSRValidatorUtil.validate(loginDto);
+    }
+
+    @Test
+    public void cott() {
+        Integer a = -128;
+        Integer b = -128;
+
+        System.out.println(a == b);
+    }
+
+    @Test
+    public void yyyy() {
+        String spl = "a,b,c,,,,,h,i";
+        for (String v : spl.split(",")) {
+            System.out.println(v);
+        }
+
+        String spl2 = "a,b,c,,,,,";
+        for (String v : spl2.split(",")) {
+            System.out.println(v);
+        }
+    }
+
+    @Test
+    public void nioTest() {
+
     }
 
 }

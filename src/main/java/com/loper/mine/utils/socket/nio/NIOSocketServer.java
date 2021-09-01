@@ -102,7 +102,7 @@ public class NIOSocketServer implements NIOBaseSocket {
         SocketChannel client = server.accept();
         client.configureBlocking(false);
 
-        String msg = "agree reg to sk server ...";
+        String msg = "agree rCeg to sk server ...";
         client.write(ByteBuffer.wrap(msg.getBytes()));
         client.register(this.selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }

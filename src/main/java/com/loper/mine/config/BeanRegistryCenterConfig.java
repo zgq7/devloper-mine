@@ -33,7 +33,7 @@ public class BeanRegistryCenterConfig {
 
 		//拦截路径配置
 		List<String> uriList = new ArrayList<>(10);
-		uriList.add("/dev/*");
+		uriList.add("/*");
 
 		filterFilterRegistrationBean.setFilter(baseFilter);
 		filterFilterRegistrationBean.setEnabled(true);
@@ -97,7 +97,7 @@ public class BeanRegistryCenterConfig {
 	 * 开启webSocket 容器管理
 	 * 如果不用springboot 使用 独立的 tomcat则不需要此bean
 	 **/
-	@Bean
+	//@Bean
 	public ServerEndpointExporter serverEndpointExporter() {
 		return new ServerEndpointExporter();
 	}

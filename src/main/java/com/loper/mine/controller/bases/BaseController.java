@@ -57,8 +57,6 @@ public class BaseController {
      * 按选择过滤
      **/
     public <T> ResponseEntity<String> response(ResponseResult<T> result, SerializeFilter[] serializeFilters) {
-        logger.info("{}", ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(JSON.toJSONString(result, serializeFilters)));
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(JSON.toJSONString(result, serializeFilters));
     }

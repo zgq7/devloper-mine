@@ -1,7 +1,7 @@
 package com.loper.mine.mapper.repositry;
 
 import com.loper.mine.mapper.base.BaseRepositry;
-import com.loper.mine.model.Aopi;
+import com.loper.mine.model.PmsTest;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
  * repositry 可可直接引用basemapper
  * basemapper 无法满足的前提下，调用具体的aopmapper
  */
-@Repository(AopiRepositry.PACKAGE_BEAN_NAME)
-public class AopiRepositry extends BaseRepositry<Aopi> {
-    public static final String PACKAGE_BEAN_NAME = "aopiRepositry";
+@Repository(PmsTestRepositry.PACKAGE_BEAN_NAME)
+public class PmsTestRepositry extends BaseRepositry<PmsTest> {
+    public static final String PACKAGE_BEAN_NAME = "pmsTestRepositry";
 
 }

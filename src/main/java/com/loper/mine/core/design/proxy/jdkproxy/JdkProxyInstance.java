@@ -8,11 +8,11 @@ import java.lang.reflect.Method;
  * @date 2021/4/19 14:31
  * @description
  **/
-public class JdkHandler implements InvocationHandler {
+public class JdkProxyInstance implements InvocationHandler {
 
     private Object targetProxy;
 
-    public JdkHandler(Object targetProxy) {
+    public JdkProxyInstance(Object targetProxy) {
         super();
         this.targetProxy = targetProxy;
     }

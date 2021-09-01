@@ -22,11 +22,11 @@
         <!-- MyBatis Generator -->
         <!-- Java接口和实体类 -->
         <targetJavaProject>${basedir}/src/main/java</targetJavaProject>
-        <targetMapperPackage>com.dev.mapper.mappers1</targetMapperPackage>
-        <targetModelPackage>com.dev.model1</targetModelPackage>
+        <targetMapperPackage>com.loper.mine.mapper</targetMapperPackage>
+        <targetModelPackage>com.loper.mine.model</targetModelPackage>
         <!-- XML生成路径 -->
         <targetResourcesProject>${basedir}/src/main/resources</targetResourcesProject>
-        <targetXMLPackage>mapper1</targetXMLPackage>
+        <targetXMLPackage>mapper</targetXMLPackage>
 
         <!-- 通用mapper -->
         <tk.mybatis.version>4.1.5</tk.mybatis.version>
@@ -175,6 +175,12 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
         </dependency>
 
     </dependencies>

@@ -310,11 +310,4 @@ public class ApplicationTests {
         logger.info("{}", pmsTestMapper.selectByIds(String.join(",", Arrays.asList("1", "2"))));
     }
 
-    @Test
-    public void test24() {
-        localThreadPool.execute(() -> aopiService.insertPmsList());
-        logger.info("获取。。");
-        logger.info("{}", pmsTestMapper.selectAll());
-    }
-
 }

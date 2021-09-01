@@ -11,16 +11,15 @@ import java.util.UUID;
  * @date 2021/4/19 14:38
  * @description
  **/
-public class StartMain {
+public class StartJdkMain {
 
     public static void main(String[] args) {
         ProxyImpl proxyImp = new ProxyImpl();
-        JdkHandler jdkHandler = new JdkHandler(proxyImp);
+        JdkProxyInstance jdkProxyInstance = new JdkProxyInstance(proxyImp);
         Class<?> clazz = proxyImp.getClass();
 
-        ProxyInterface proxyInterface = (ProxyInterface) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), jdkHandler);
-        proxyInterface.setConcurrentThreadInfo(UUID.randomUUID().toString());
+        ProxyInterface proxyInterface = (ProxyInterface) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), jdkProxyInstance);
+        proxyInterface.setConcurrentThreadInfo("jdk proxy");
 
-        //proxyInterface.printConcurrentThreadInfo();
     }
 }
