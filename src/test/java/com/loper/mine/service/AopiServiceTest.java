@@ -26,7 +26,7 @@ public class AopiServiceTest {
 
     @Test
     public void transactionalTestA() {
-        aopiService.insertOne();
+        aopiService.insertA();
     }
 
     @Test

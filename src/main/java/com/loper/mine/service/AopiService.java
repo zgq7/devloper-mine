@@ -32,7 +32,7 @@ public class AopiService {
      * 最终：回滚
      **/
     @Transactional(rollbackFor = Exception.class)
-    public void insertOne() {
+    public void insertA() {
         Aopi aopi = new Aopi();
         aopi.setName("1");
         aopi.setAge(23);
@@ -74,6 +74,8 @@ public class AopiService {
      * serviceA 加了 @Transactional
      * serviceB 没加 @Transactional，但是手动 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
      * 最终：回滚
+     * <p>
+     * 若不手动 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly()，那么不会回滚
      **/
     @Transactional(rollbackFor = Exception.class)
     public void insertAAA() {
@@ -123,7 +125,8 @@ public class AopiService {
      * 本类方法A 加了 @Transactional
      * 本类方法B 加了 @Transactional，异常被捕获，并不抛出
      * 最终：不回滚
-     * 原因：调用 insert 并不会重新走代理调用
+     * <p>
+     * 原因：调用 insert 并不会重新走代理调用（this 对象不是代理对象）
      **/
     @Transactional(rollbackFor = Exception.class)
     public void insertAAAAA() {
@@ -148,6 +151,8 @@ public class AopiService {
      * 本类方法A 加了 @Transactional
      * 自己注入自己，再调用本类方法B，加了 @Transactional，异常被捕获，并不抛出
      * 最终：回滚
+     * <p>
+     * 原因：aopiService bean 是一个代理bean，每次调用都会重新走代理调用逻辑。
      **/
     @Transactional(rollbackFor = Exception.class)
     public void insertAAAAAA() {
