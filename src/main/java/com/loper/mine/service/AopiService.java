@@ -134,6 +134,7 @@ public class AopiService {
         aopi.setName("1");
         aopi.setAge(23);
         aopiRepositry.insert(aopi);
+        insert();
         try {
             insert();
         } catch (Exception e) {

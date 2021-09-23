@@ -724,4 +724,26 @@ public class NormallTest {
 
     }
 
+    @Test
+    public void unicode() {
+        String sub = "\u0001|\u0001";
+        String unicode = "213213\u0001|\u0001321313";
+
+        String[] arr = unicode.split(sub.replace("|", "[|]"));
+        System.out.println(arr);
+
+        System.out.println("|||||".replace("|", "[|]"));
+    }
+
+    @Test
+    public void testss() {
+        String xx = "2021-09-09 16:59:55:00";
+        System.out.println(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @Test
+    public void testyu() {
+        System.out.println(64 / 4);
+    }
+
 }
