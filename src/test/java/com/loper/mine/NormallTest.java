@@ -743,7 +743,7 @@ public class NormallTest {
 
     @Test
     public void testyu() {
-        System.out.println(64 / 4);
+        System.out.println("123".substring(4, 6));
     }
 
 }

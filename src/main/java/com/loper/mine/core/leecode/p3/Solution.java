@@ -1,11 +1,9 @@
 package com.loper.mine.core.leecode.p3;
 
-import java.util.Stack;
-
 /**
  * @author liaonanzhou
  * @date 2021/9/24 10:57
- * @description
+ * @description 接雨水
  **/
 public class Solution {
 
