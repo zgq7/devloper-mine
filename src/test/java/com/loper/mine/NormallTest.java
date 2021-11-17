@@ -2,6 +2,8 @@ package com.loper.mine;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.TtlRunnable;
 import com.loper.mine.config.LocalThreadPool;
 import com.loper.mine.controller.dto.LoginDto;
 import com.loper.mine.model.Aopi;
@@ -744,6 +746,62 @@ public class NormallTest {
     @Test
     public void testyu() {
         System.out.println("123".substring(4, 6));
+    }
+
+
+    /**
+     * 期望值：1 2
+     * 实际值：1 1
+     **/
+    @Test
+    public void testThreadLocal() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ThreadLocal<String> threadLocal = new InheritableThreadLocal<>();
+
+        Semaphore semaphore = new Semaphore(0);
+        Runnable runnable = () -> {
+            String v = threadLocal.get();
+            System.out.println(v);
+            semaphore.release();
+        };
+
+        threadLocal.set("1");
+        executorService.execute(runnable);
+        semaphore.acquire();
+        threadLocal.remove();
+
+        threadLocal.set("2");
+        executorService.execute(runnable);
+        semaphore.acquire();
+        threadLocal.remove();
+
+    }
+
+    @Test
+    public void testTTL() throws InterruptedException {
+        int cap = 10;
+        ExecutorService executorService = Executors.newFixedThreadPool(cap);
+        //executorService = TtlExecutors.getTtlExecutorService(executorService);
+        ThreadLocal<String> threadLocal = new TransmittableThreadLocal<>();
+
+        Semaphore lock = new Semaphore(0);
+        Runnable runnable = () -> {
+            System.out.println("当前线程ID：" + Thread.currentThread().getId() + "，cache v = " + threadLocal.get());
+            lock.release();
+        };
+        TtlRunnable ttlRunnable;
+
+        for (int i = 1; i <= cap; i++) {
+            threadLocal.set(String.valueOf(i));
+            // 即使是同一个Runnable任务多次提交到线程池时，每次提交时都需要通过修饰操作（即TtlRunnable.get(task)）以抓取这次提交时的TransmittableThreadLocal上下文的值。
+            // https://github.com/alibaba/transmittable-thread-local/tree/v2.12.2
+            ttlRunnable = TtlRunnable.get(runnable);
+            for (int j = 0; j < 3; j++) {
+                executorService.execute(Objects.requireNonNull(ttlRunnable));
+                lock.acquire();
+            }
+            System.out.println("下一批次");
+        }
     }
 
 }

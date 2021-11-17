@@ -57,18 +57,35 @@ public class KuaisuSort {
     /*
      * 单边循环法
      * pivot 基准节点
-     * mark  节点
-     * right 节点（右边界）
+     * mark  mark节点
+     * end   节点（右边界）
      */
-    private static int[] singleSort(int[] arr, int mark, int right) {
-        System.out.println(Arrays.toString(arr) + ",当前轮：mark = " + mark + ",right = " + right);
-        if (mark == right) {
-            return arr;
+    private static void singleSort(int[] arr, int start, int end) {
+        if (start >= end)
+            return;
+
+        int mark = mark(arr, start, end);
+        System.out.println(Arrays.toString(arr) + ":" + start + ":" + end + ":" + mark);
+
+        if (mark == start) {
+            start++;
+
+            singleSort(arr, start, end);
+        } else {
+            int temp = arr[start];
+            arr[start] = arr[mark];
+            arr[mark] = temp;
+
+            singleSort(arr, start, mark - 1);
+            singleSort(arr, mark + 1, end);
         }
 
-        int pivot = mark;
-        int currentMark = mark;
-        for (int i = pivot + 1; i <= right; i++) {
+    }
+
+    private static int mark(int[] arr, int start, int end) {
+        int pivot, mark;
+        mark = pivot = start;
+        for (int i = start + 1; i <= end; i++) {
             if (arr[i] <= arr[pivot]) {
                 mark++;
 
@@ -78,20 +95,7 @@ public class KuaisuSort {
             }
         }
 
-        if (currentMark == mark && mark < arr.length) {
-            mark++;
-        } else {
-            int temp = arr[mark];
-            arr[mark] = arr[pivot];
-            arr[pivot] = temp;
-
-            // 左边
-            arr = singleSort(arr, currentMark, mark - 1);
-        }
-        // 右边
-        arr = singleSort(arr, mark, right);
-
-        return arr;
+        return mark;
     }
 
 
