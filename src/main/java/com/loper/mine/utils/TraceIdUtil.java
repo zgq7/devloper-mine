@@ -15,12 +15,27 @@ public class TraceIdUtil {
         return RandomStringUtils.randomAlphanumeric(MAX_ID_LENGTH);
     }
 
-    public static void setTraceId(String traceId) {
-        traceId = getTraceId() == null ? (StringUtils.isBlank(traceId) ? TraceIdUtil.genTraceId() : traceId) : getTraceId();
+    public static void setTraceId() {
+        String traceId = getTraceIdRequiredNonNull() == null ? genTraceId() : getTraceIdRequiredNonNull();
         MDC.put(TRACE_ID, StringUtils.substring(traceId, -MAX_ID_LENGTH));
     }
 
-    public static String getTraceId() {
+    public static void setTraceId(String traceId) {
+        String currentTranceId = getTraceId();
+        traceId = currentTranceId == null ? (StringUtils.isBlank(traceId) ? TraceIdUtil.genTraceId() : traceId) : currentTranceId;
+        MDC.put(TRACE_ID, StringUtils.substring(traceId, -MAX_ID_LENGTH));
+    }
+
+    public static void setTraceId(Thread parent) {
+        String traceId = getTraceIdRequiredNonNull() == null ? genTraceId() : getTraceIdRequiredNonNull();
+        MDC.put(TRACE_ID, StringUtils.substring(traceId, -MAX_ID_LENGTH));
+    }
+
+    public static String getTraceId(){
+        return MDC.get(TRACE_ID);
+    }
+
+    public static String getTraceIdRequiredNonNull() {
         String traceId = MDC.get(TRACE_ID);
         return StringUtils.isBlank(traceId) ? TraceIdUtil.genTraceId() : traceId;
     }

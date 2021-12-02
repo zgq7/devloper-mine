@@ -781,27 +781,37 @@ public class NormallTest {
     public void testTTL() throws InterruptedException {
         int cap = 10;
         ExecutorService executorService = Executors.newFixedThreadPool(cap);
-        //executorService = TtlExecutors.getTtlExecutorService(executorService);
-        ThreadLocal<String> threadLocal = new TransmittableThreadLocal<>();
+        TransmittableThreadLocal<String> threadLocal = new TransmittableThreadLocal<>();
 
         Semaphore lock = new Semaphore(0);
         Runnable runnable = () -> {
-            System.out.println("当前线程ID：" + Thread.currentThread().getId() + "，cache v = " + threadLocal.get());
+            String v = threadLocal.get();
+            System.out.println("当前线程ID：" + Thread.currentThread().getId() + "，cache v = " + v);
             lock.release();
         };
         TtlRunnable ttlRunnable;
 
-        for (int i = 1; i <= cap; i++) {
-            threadLocal.set(String.valueOf(i));
-            // 即使是同一个Runnable任务多次提交到线程池时，每次提交时都需要通过修饰操作（即TtlRunnable.get(task)）以抓取这次提交时的TransmittableThreadLocal上下文的值。
-            // https://github.com/alibaba/transmittable-thread-local/tree/v2.12.2
-            ttlRunnable = TtlRunnable.get(runnable);
-            for (int j = 0; j < 3; j++) {
-                executorService.execute(Objects.requireNonNull(ttlRunnable));
-                lock.acquire();
-            }
-            System.out.println("下一批次");
-        }
+        threadLocal.set("1");
+        ttlRunnable = TtlRunnable.get(runnable);
+        executorService.execute(Objects.requireNonNull(ttlRunnable));
+        lock.acquire();
+
+        threadLocal.set("2");
+        ttlRunnable = TtlRunnable.get(runnable);
+        executorService.execute(Objects.requireNonNull(ttlRunnable));
+        lock.acquire();
+
+//        for (int i = 1; i <= cap; i++) {
+//            threadLocal.set(String.valueOf(i));
+//            // 即使是同一个Runnable任务多次提交到线程池时，每次提交时都需要通过修饰操作（即TtlRunnable.get(task)）以抓取这次提交时的TransmittableThreadLocal上下文的值。
+//            // https://github.com/alibaba/transmittable-thread-local/tree/v2.12.2
+//            ttlRunnable = TtlRunnable.get(runnable);
+//            for (int j = 0; j < 3; j++) {
+//                executorService.execute(Objects.requireNonNull(ttlRunnable));
+//                lock.acquire();
+//            }
+//            System.out.println("下一批次");
+//        }
     }
 
 }
