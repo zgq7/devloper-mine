@@ -52,6 +52,8 @@
     
     使用本地代理用ssh连上 linux服务器，并访问不暴露在外网的服务。
     
+   <img src="https://github.com/zgq7/devloper-mine/blob/master/jssh.jpg"></img>
+    
 
 
 精力有限，预计不再新增元素...
