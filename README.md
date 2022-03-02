@@ -1,5 +1,6 @@
 # devloper-mine
-个人学习笔记
+
+    一点练手的小玩意。
 
 ### 1：SpringBoot + MyabtisGenerator + tk.mybatis
    blog：https://www.cnblogs.com/zgq7/p/11084161.html
@@ -20,7 +21,11 @@
 
 ### 5：SpringBoot ExceptionHandler
 
+    spring mvc 异常处理器的使用
+
 ### 6：Java 爬虫
+
+    进行网页数据的动态爬取
 
 ### 7：JAVA BIO、NIO，learning socket通信、learning websocket
 ```diff
@@ -30,13 +35,13 @@
   
   3：为什么我在工作中不使用它
 ```
-### 8：SpringBoot + Nacos/Apollo
 
-### 9：SpringBoot + Quartz
+### 8：SpringBoot + Quartz
 ```diff  
-  1：最大的收获就是Quartz的上下文无法访问Spring的IOC容器获取bean，只能通过ApplicationContext 来获取容器中的Bean
+  1：最大的收获就是Quartz的上下文无法访问Spring的IOC容器获取bean，
+     只能通过ApplicationContext 来获取容器中的Bean
 ```
-### 10：JUC learning 
+### 9：JUC learning 
 ```diff
   1：CountDownLatch（闭锁）、Semaphore（栅栏）、CyclicBarrier（屏障）
   2：volatile、AtomicReference
@@ -44,7 +49,11 @@
 ```
 
 ### 11：JSSH learning
-
+    
+    使用本地代理用ssh连上 linux服务器，并访问不暴露在外网的服务。
+    
+   <img src="https://github.com/zgq7/devloper-mine/blob/master/jssh.jpg"></img>
+    
 
 
 精力有限，预计不再新增元素...

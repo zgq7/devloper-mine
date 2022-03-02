@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository(AopiRepositry.PACKAGE_BEAN_NAME)
 public class AopiRepositry extends BaseRepositry<Aopi> {
-    public static final String PACKAGE_BEAN_NAME = "baseRepositry";
+    public static final String PACKAGE_BEAN_NAME = "aopiRepositry";
 
 }

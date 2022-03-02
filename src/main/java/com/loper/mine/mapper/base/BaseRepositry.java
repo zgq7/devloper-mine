@@ -1,8 +1,8 @@
 package com.loper.mine.mapper.base;
 
-import com.loper.mine.utils.pageHelper.PageModel;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.loper.mine.utils.pageHelper.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
@@ -16,6 +16,10 @@ public class BaseRepositry<T> {
 
     @Autowired
     private BaseMapper<T> baseMapper;
+
+    public int insert(T record) {
+        return baseMapper.insert(record);
+    }
 
     public List<T> selectAll() {
         return baseMapper.selectAll();

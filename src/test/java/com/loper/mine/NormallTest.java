@@ -2,20 +2,21 @@ package com.loper.mine;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.TtlRunnable;
 import com.loper.mine.config.LocalThreadPool;
+import com.loper.mine.controller.dto.LoginDto;
 import com.loper.mine.model.Aopi;
-import com.loper.mine.service.TestServiceLamdba;
+import com.loper.mine.utils.JSRValidatorUtil;
 import com.loper.mine.utils.time.TimeUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import sun.net.util.URLUtil;
 
 import java.io.*;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -24,7 +25,6 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -116,15 +116,20 @@ public class NormallTest {
      * 快速排序
      **/
     @Test
-    public void test061() {
+    public void quickSortTest() {
         int[] test = new int[]{5, 8, 4, 1, 6, 3, 7, 9, 10, 11};
-        test06(test, 0, 8);
-        for (int p = 0; p < test.length; p++) {
-            System.out.print(test[p] + ",");
+        quickSort(test, 0, 8);
+        for (int i : test) {
+            System.out.print(i + ",");
         }
+        int index = erFenSearch(test, 100);
+        System.out.println(index);
     }
 
-    private void test06(int[] test, int low, int high) {
+    /**
+     * 快速排序
+     **/
+    private void quickSort(int[] test, int low, int high) {
         if (low > high)
             return;
 
@@ -146,8 +151,32 @@ public class NormallTest {
         }
         test[low] = test[i];
         test[i] = temp;
-        test06(test, low, j - 1);
-        test06(test, j + 1, high);
+        quickSort(test, low, j - 1);
+        quickSort(test, j + 1, high);
+    }
+
+    /**
+     * 二分查找
+     */
+    private int erFenSearch(int[] arr, int data) {
+        // 起始位
+        int low = 0;
+        // 结束位
+        int high = arr.length - 1;
+        // 中位
+        int mid;
+
+        while (low <= high) {
+            mid = (low + high) / 2;
+            if (arr[mid] == data) {
+                return mid;
+            } else if (arr[mid] < data) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -155,8 +184,8 @@ public class NormallTest {
      **/
     @Test
     public void test07() throws InterruptedException {
-        ThreadLocal<Integer> threadLocal = new ThreadLocal();
-        ThreadLocal<String> threadLocal1 = new ThreadLocal();
+        ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
+        ThreadLocal<String> threadLocal1 = new ThreadLocal<>();
 
         Thread thread1 = new Thread(() -> {
             threadLocal.set(1);
@@ -239,25 +268,21 @@ public class NormallTest {
      * 闭锁
      **/
     @Test
-    public void test12() {
+    public void test12() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(2);
-        new Thread(() -> {
-            System.out.println(Thread.currentThread().getId());
-            latch.countDown();
-        }).start();
+        for (int i = 0; i < 2; i++) {
+            new Thread(() -> {
+                try {
+                    System.out.println(Thread.currentThread().getId());
+                } catch (Exception ignore) {
 
-        new Thread(() -> {
-            System.out.println(Thread.currentThread().getName());
-            latch.countDown();
-        }).start();
-
-        try {
-            latch.await();
-        } catch (Exception e) {
-            e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            }).start();
         }
 
-        System.out.println("success");
+        latch.await();
     }
 
     @Test
@@ -516,12 +541,6 @@ public class NormallTest {
     }
 
     @Test
-    public void test27() {
-        TestServiceLamdba testServiceLamdba = new TestServiceLamdba();
-        System.out.println(testServiceLamdba.sayname("贺江立1", (name) -> "hi：" + name));
-    }
-
-    @Test
     public void test28() {
         System.out.println(3 & 9);
 
@@ -659,8 +678,8 @@ public class NormallTest {
 
     @Test
     public void dateTest() {
-        LocalDate localDate1 = LocalDate.of(2020,1,1);
-        LocalDate localDate2 = LocalDate.of(2020,7,1);
+        LocalDate localDate1 = LocalDate.of(2020, 1, 1);
+        LocalDate localDate2 = LocalDate.of(2020, 7, 1);
 
         Date dt = TimeUtils.parseDate(localDate1);
         Date dp = TimeUtils.parseDate(localDate2);
@@ -668,6 +687,129 @@ public class NormallTest {
         long days = localDate1.until(localDate2, ChronoUnit.DAYS);
         System.out.println(days);
 
+    }
+
+    @Test
+    public void validateTest() {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setUsername("123456");
+        loginDto.setPassword("12345678");
+
+        JSRValidatorUtil.validate(loginDto);
+    }
+
+    @Test
+    public void cott() {
+        Integer a = -128;
+        Integer b = -128;
+
+        System.out.println(a == b);
+    }
+
+    @Test
+    public void yyyy() {
+        String spl = "a,b,c,,,,,h,i";
+        for (String v : spl.split(",")) {
+            System.out.println(v);
+        }
+
+        String spl2 = "a,b,c,,,,,";
+        for (String v : spl2.split(",")) {
+            System.out.println(v);
+        }
+    }
+
+    @Test
+    public void nioTest() {
+
+    }
+
+    @Test
+    public void unicode() {
+        String sub = "\u0001|\u0001";
+        String unicode = "213213\u0001|\u0001321313";
+
+        String[] arr = unicode.split(sub.replace("|", "[|]"));
+        System.out.println(arr);
+
+        System.out.println("|||||".replace("|", "[|]"));
+    }
+
+    @Test
+    public void testss() {
+        String xx = "2021-09-09 16:59:55:00";
+        System.out.println(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @Test
+    public void testyu() {
+        System.out.println("123".substring(4, 6));
+    }
+
+
+    /**
+     * 期望值：1 2
+     * 实际值：1 1
+     **/
+    @Test
+    public void testThreadLocal() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ThreadLocal<String> threadLocal = new InheritableThreadLocal<>();
+
+        Semaphore semaphore = new Semaphore(0);
+        Runnable runnable = () -> {
+            String v = threadLocal.get();
+            System.out.println(v);
+            semaphore.release();
+        };
+
+        threadLocal.set("1");
+        executorService.execute(runnable);
+        semaphore.acquire();
+        threadLocal.remove();
+
+        threadLocal.set("2");
+        executorService.execute(runnable);
+        semaphore.acquire();
+        threadLocal.remove();
+
+    }
+
+    @Test
+    public void testTTL() throws InterruptedException {
+        int cap = 10;
+        ExecutorService executorService = Executors.newFixedThreadPool(cap);
+        TransmittableThreadLocal<String> threadLocal = new TransmittableThreadLocal<>();
+
+        Semaphore lock = new Semaphore(0);
+        Runnable runnable = () -> {
+            String v = threadLocal.get();
+            System.out.println("当前线程ID：" + Thread.currentThread().getId() + "，cache v = " + v);
+            lock.release();
+        };
+        TtlRunnable ttlRunnable;
+
+        threadLocal.set("1");
+        ttlRunnable = TtlRunnable.get(runnable);
+        executorService.execute(Objects.requireNonNull(ttlRunnable));
+        lock.acquire();
+
+        threadLocal.set("2");
+        ttlRunnable = TtlRunnable.get(runnable);
+        executorService.execute(Objects.requireNonNull(ttlRunnable));
+        lock.acquire();
+
+//        for (int i = 1; i <= cap; i++) {
+//            threadLocal.set(String.valueOf(i));
+//            // 即使是同一个Runnable任务多次提交到线程池时，每次提交时都需要通过修饰操作（即TtlRunnable.get(task)）以抓取这次提交时的TransmittableThreadLocal上下文的值。
+//            // https://github.com/alibaba/transmittable-thread-local/tree/v2.12.2
+//            ttlRunnable = TtlRunnable.get(runnable);
+//            for (int j = 0; j < 3; j++) {
+//                executorService.execute(Objects.requireNonNull(ttlRunnable));
+//                lock.acquire();
+//            }
+//            System.out.println("下一批次");
+//        }
     }
 
 }

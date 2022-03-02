@@ -2,6 +2,8 @@ package com.loper.mine;
 
 import com.alibaba.fastjson.JSON;
 import com.loper.mine.config.LocalThreadPool;
+import com.loper.mine.controller.dto.LoginDto;
+import com.loper.mine.controller.dto.TestDto;
 import com.loper.mine.mapper.base.BaseRepositry;
 import com.loper.mine.mapper.mappers.AopiMapper;
 import com.loper.mine.mapper.mappers.PmsTestMapper;
@@ -11,6 +13,7 @@ import com.loper.mine.model.PmsTest;
 import com.loper.mine.model.email.EmailModel;
 import com.loper.mine.service.AopiService;
 import com.loper.mine.utils.email.MailSendUtils;
+import com.loper.mine.utils.exception.ServiceException;
 import com.loper.mine.utils.pageHelper.PageModel;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,15 +27,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 
@@ -309,6 +312,41 @@ public class DevloperMineApplicationTests {
         aopi.setId(2);
         aopi = aopiMapper.selectOne(aopi);
         System.out.println(aopi);
+    }
+
+    @Test
+    public void subl() {
+        Future<Void> future = localThreadPool.submit(() -> {
+            logger.error("...");
+            TimeUnit.SECONDS.sleep(1);
+            return null;
+        });
+
+        try {
+            future.get(3000, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Resource
+    private SpringValidatorAdapter adapter;
+    @Resource
+    private Validator validator;
+
+    @Test
+    public void validate() {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setUsername("123456");
+        loginDto.setPassword("123456");
+
+        Set<ConstraintViolation<LoginDto>> validateResult = adapter.validate(loginDto);
+        //Set<ConstraintViolation<LoginDto>> validateResult = validator.validate(loginDto);
+
+        validateResult.forEach(v -> {
+            logger.error("JSR校验异常，property:{}，message:{}", v.getPropertyPath(), v.getMessage());
+            throw new ServiceException(v.getMessage());
+        });
     }
 
 

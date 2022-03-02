@@ -1,5 +1,9 @@
 package com.loper.mine.utils.socket.nio;
 
+import com.loper.mine.config.LocalThreadPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -15,6 +19,8 @@ import java.util.Set;
  * @author zgq7
  */
 public class NIOSocketClient implements NIOBaseSocket {
+
+    private final static Logger logger = LoggerFactory.getLogger(NIOSocketServer.class);
 
     /**
      * 初始化一个select用于轮询监视
@@ -47,17 +53,16 @@ public class NIOSocketClient implements NIOBaseSocket {
         client.connect(new InetSocketAddress(ip, port));
 
         this.key = client.register(selector, SelectionKey.OP_CONNECT);
-        System.out.println(this.selector.hashCode() + " -> client 启动成功 ");
+
+        logger.info("nio sk client 启动成功,ip:{},port:{}", ip, port);
     }
 
     @Override
-    public void getNewMsg() throws IOException {
-        int i = 0;
+    public void polling() throws IOException {
         while (this.selector.select() > 0) {
             Set<SelectionKey> keySet = this.selector.selectedKeys();
             for (SelectionKey key : keySet) {
                 if (key.isConnectable()) {
-                    System.out.println("reg");
                     registry(key);
                 }
                 //key可读时
@@ -66,11 +71,19 @@ public class NIOSocketClient implements NIOBaseSocket {
                 }
                 //key可写时
                 if (key.isWritable() && key.isValid()) {
-                    writeMsg(key);
+                    LocalThreadPool.getInstance().execute(() -> {
+                        try {
+                            writeMsg(key);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    //取消写操作，这一步会导致 interestOps = 1 , readOps = 5
+                    key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+                    //key 经过下一轮select 后变为只可读 interestOps = 1 , readOps = 1
                 }
                 keySet.remove(key);
             }
-            i++;
         }
     }
 
@@ -82,7 +95,7 @@ public class NIOSocketClient implements NIOBaseSocket {
         }
         client.configureBlocking(false);
 
-        String msg = "hello";
+        String msg = "apply reg to sk server ...";
         client.write(ByteBuffer.wrap(msg.getBytes()));
         client.register(this.selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
@@ -103,7 +116,7 @@ public class NIOSocketClient implements NIOBaseSocket {
         }
         String msg = new String(bytes).trim();
 
-        System.out.println("server msg：" + msg);
+        logger.info("sk server msg：{}", msg);
         this.readBuffer.clear();
     }
 
@@ -122,7 +135,7 @@ public class NIOSocketClient implements NIOBaseSocket {
     public static void main(String[] args) throws IOException {
         NIOSocketClient client = new NIOSocketClient();
         client.init("127.0.0.1", 8366);
-        client.getNewMsg();
+        client.polling();
     }
 
 }

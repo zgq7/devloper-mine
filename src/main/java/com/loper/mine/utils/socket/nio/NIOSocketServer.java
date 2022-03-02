@@ -1,6 +1,8 @@
 package com.loper.mine.utils.socket.nio;
 
 import com.loper.mine.config.LocalThreadPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,6 +21,8 @@ import java.util.Set;
  * @author zgq7
  */
 public class NIOSocketServer implements NIOBaseSocket {
+
+    private final static Logger logger = LoggerFactory.getLogger(NIOSocketServer.class);
 
     /**
      * 初始化一个select用于轮询监视
@@ -39,32 +43,31 @@ public class NIOSocketServer implements NIOBaseSocket {
         this.selector = Selector.open();
 
         serverSocketChannel.socket().bind(new InetSocketAddress(ip, port));
-        //设置为非阻塞
+        // 设置为非阻塞
         serverSocketChannel.configureBlocking(false);
-        //注册到selector上
+        // 注册到selector上
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-        System.out.println(this.selector.hashCode() + " ->server 启动成功");
+        logger.info("nio sk server 启动成功,ip:{},port:{}", ip, port);
     }
 
     @Override
-    public void getNewMsg() throws IOException {
-        int i = 0;
+    public void polling() throws IOException {
+        //selector.select 会阻塞
         while (this.selector.select() > 0) {
             Set<SelectionKey> selectionKeySet = this.selector.selectedKeys();
             selectionKeySet.forEach(key -> {
-                System.out.println(">>>>>>>>>>" + LocalTime.now() + ": readops = " + key.readyOps() + " itops = " + key.interestOps());
+                logger.info(">>>>>>>>>>time->{},readops->{},itops->{}", LocalTime.now(), key.readyOps(), +key.interestOps());
                 try {
-                    //测试该管道是否可以建立一个新的socket连接
+                    // 测试该管道是否可以建立一个新的socket连接
                     if (key.isAcceptable()) {
-                        System.out.println("reg");
                         registry(key);
                     }
-                    //key 可读时
+                    // key 可读时
                     if (key.isReadable()) {
                         readMsg(key);
                     }
-                    //key可写时
+                    // key 可写时
                     if (key.isWritable() && key.isValid()) {
                         LocalThreadPool.getInstance().execute(() -> {
                             try {
@@ -78,12 +81,16 @@ public class NIOSocketServer implements NIOBaseSocket {
                         //key 经过下一轮select 后变为只可读 interestOps = 1 , readOps = 1
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("轮询selectionKey 异常", e);
+                    try {
+                        key.channel().close();
+                    } catch (IOException ex) {
+                        logger.error("关闭channel 异常", e);
+                    }
+                } finally {
+                    selectionKeySet.remove(key);
                 }
-                System.out.println("<<<<<<<<<<<<<<<<" + LocalTime.now() + ": readops = " + key.readyOps() + " itops = " + key.interestOps());
-                selectionKeySet.remove(key);
             });
-            i++;
         }
 
     }
@@ -95,7 +102,7 @@ public class NIOSocketServer implements NIOBaseSocket {
         SocketChannel client = server.accept();
         client.configureBlocking(false);
 
-        String msg = "hello";
+        String msg = "agree rCeg to sk server ...";
         client.write(ByteBuffer.wrap(msg.getBytes()));
         client.register(this.selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
@@ -105,24 +112,19 @@ public class NIOSocketServer implements NIOBaseSocket {
         SocketChannel client = (SocketChannel) key.channel();
 
         this.readBuffer.clear();
-        try {
-            int readsum = client.read(this.readBuffer);
-            int position = this.readBuffer.position();
-            //flip方法可使buffer中的ops归0
-            this.readBuffer.flip();
+        int readsum = client.read(this.readBuffer);
+        int position = this.readBuffer.position();
+        //flip方法可使buffer中的ops归0
+        this.readBuffer.flip();
 
-            byte[] bytes = new byte[position];
-            for (int i = 0; i < position; i++) {
-                bytes[i] = this.readBuffer.get();
-            }
-            String msg = new String(bytes).trim();
-
-            System.out.println("client msg：" + msg);
-            this.readBuffer.clear();
-        } catch (IOException e) {
-            this.selector.selectedKeys().remove(key);
-            System.out.println("远程主机或已关闭，获取信息失败");
+        byte[] bytes = new byte[position];
+        for (int i = 0; i < position; i++) {
+            bytes[i] = this.readBuffer.get();
         }
+        String msg = new String(bytes).trim();
+
+        logger.info("client msg：{}", msg);
+        this.readBuffer.clear();
     }
 
     @Override
@@ -139,7 +141,7 @@ public class NIOSocketServer implements NIOBaseSocket {
     public static void main(String[] args) throws IOException {
         NIOSocketServer server = new NIOSocketServer();
         server.init("127.0.0.1", 8366);
-        server.getNewMsg();
+        server.polling();
     }
 
 }
