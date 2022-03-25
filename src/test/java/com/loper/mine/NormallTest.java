@@ -13,10 +13,12 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import sun.net.util.URLUtil;
 
 import java.io.*;
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -810,6 +812,25 @@ public class NormallTest {
 //            }
 //            System.out.println("下一批次");
 //        }
+    }
+
+    @Test
+    public void xk() throws ExecutionException, InterruptedException {
+        int a = 200, b = 6;
+        // 或运算
+        System.out.println(100 | 6);
+        // 与运算
+        System.out.println(100 & 6);
+        // 异或运算
+        System.out.println(100 ^ 6);
+
+        System.out.println(100 / 6);
+
+        CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
+           throw new RuntimeException();
+        });
+
+        future.get();
     }
 
 }
