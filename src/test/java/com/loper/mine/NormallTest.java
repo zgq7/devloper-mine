@@ -14,11 +14,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.FileChannel;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,8 +40,27 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
@@ -827,10 +859,128 @@ public class NormallTest {
         System.out.println(100 / 6);
 
         CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
-           throw new RuntimeException();
+            throw new RuntimeException();
         });
 
         future.get();
     }
+
+    @Test
+    public void getChar() {
+        String dst = "hello ";
+        String src = "world";
+        char[] value = Arrays.copyOf(dst.toCharArray(), 11);
+        System.out.println(value);
+        src.getChars(0, src.length(), value, dst.length());
+        System.out.println(value);
+
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.put("1".getBytes());
+        buffer.get();
+        buffer.put("2".getBytes());
+    }
+
+    @Test
+    public void ioRead() {
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(new File("src/test/java/com/loper/mine/SQLParserTest.java"));
+            byte[] receive = new byte[8];
+            // IO 流读文件的时候不会管 byte 中的数据是否已被处理过，下一次读取直接覆盖
+            while (fileInputStream.read(receive) > 0) {
+                System.out.println(new String(receive));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileInputStream != null)
+                    fileInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void bufferRead() {
+        int capacity = 8;
+        FileInputStream fileInputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        try {
+            fileInputStream = new FileInputStream(new File("src/test/java/com/loper/mine/SQLParserTest.java"));
+            inputStreamReader = new InputStreamReader(fileInputStream);
+            bufferedReader = new BufferedReader(inputStreamReader, capacity);
+
+            CharBuffer receive = CharBuffer.allocate(capacity);
+            char[] data = new char[capacity];
+            // buffer reader 在读取数据的时候会判断buffer 中的数据是否已被清理
+            while (bufferedReader.read(receive) > 0) {
+                receive.flip();
+                receive.get(data);
+                receive.flip();
+                System.out.println(new String(data));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bufferedReader != null)
+                    bufferedReader.close();
+                if (inputStreamReader != null)
+                    inputStreamReader.close();
+                if (fileInputStream != null)
+                    fileInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void mapFile() {
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+        try {
+            File file = new File("src/test/java/com/loper/mine/SQLParserTest.java");
+            inputStream = new FileInputStream(file);
+
+            inChannel = inputStream.getChannel();
+
+            // map 不会进行数据拷贝，会在物理内存开辟一块文件映射区域，只占用物理内存。
+            //MappedByteBuffer buffer = inputStream.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+            //ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+
+            ByteBuffer buffer = ByteBuffer.allocate(8);
+            // read 会进行数据拷贝，会占用用户内存空间。
+            inChannel.read(buffer);
+            buffer.flip();
+            System.out.println(buffer.mark());
+
+            File outFile = new File("src/test/java/com/loper/mine/1.txt");
+            outputStream = new FileOutputStream(outFile);
+            outChannel = outputStream.getChannel();
+            outChannel.write(buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+                if (outputStream != null)
+                    outputStream.close();
+                if (inChannel != null)
+                    inChannel.close();
+                if (outChannel != null)
+                    outChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 }
