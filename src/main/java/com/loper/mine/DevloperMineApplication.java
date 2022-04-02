@@ -19,8 +19,7 @@ public class DevloperMineApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DevloperMineApplication.class, args);
-        //开启iosocket
-        //IOSocketServer.init();
+
     }
 
     @Bean

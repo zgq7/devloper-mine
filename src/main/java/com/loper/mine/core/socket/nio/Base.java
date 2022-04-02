@@ -1,4 +1,4 @@
-package com.loper.mine.utils.socket.nio;
+package com.loper.mine.core.socket.nio;
 
 import java.io.IOException;
 import java.nio.channels.Selector;

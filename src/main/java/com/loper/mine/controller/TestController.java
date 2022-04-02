@@ -1,13 +1,10 @@
 package com.loper.mine.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.loper.mine.controller.bases.BaseController;
 import com.loper.mine.controller.bases.ResponseResult;
 import com.loper.mine.controller.dto.TestDto;
 import com.loper.mine.model.Aopi;
 import com.loper.mine.service.AopiService;
-import com.loper.mine.utils.socket.MsgModel;
-import com.loper.mine.utils.socket.io.IOSocketServer;
 import com.loper.mine.utils.websocket.MessageModel;
 import com.loper.mine.utils.websocket.SocketManager;
 import com.loper.mine.utils.websocket.SocketServer;
@@ -74,15 +71,6 @@ public class TestController extends BaseController {
         MessageModel messageModel = new MessageModel(id, 0, msg);
         SocketManager.singleCast(messageModel);
         SocketManager.boardCast(messageModel);
-    }
-
-    /**
-     * socket测试路径
-     **/
-    @PostMapping(value = "sk")
-    public void t(@RequestBody Map<Object, Object> body) {
-        MsgModel msgModel = JSON.parseObject(JSON.toJSONString(body), MsgModel.class);
-        IOSocketServer.openConnection(msgModel);
     }
 
     /**

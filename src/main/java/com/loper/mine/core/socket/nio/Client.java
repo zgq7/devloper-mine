@@ -1,4 +1,4 @@
-package com.loper.mine.utils.socket.nio;
+package com.loper.mine.core.socket.nio;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ public class Client extends Base {
         while (true) {
             try {
                 int select = selector.select();
-                logger.info("----------------------------------");
+                logger.info("----------------------------------select={}", select);
                 Set<SelectionKey> selectionKeySet = selector.selectedKeys();
                 Iterator<SelectionKey> keyIterable = selectionKeySet.iterator();
                 while (keyIterable.hasNext()) {

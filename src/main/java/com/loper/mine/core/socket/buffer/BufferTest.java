@@ -1,8 +1,7 @@
-package com.loper.mine.utils.socket.buffer;
+package com.loper.mine.core.socket.buffer;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;

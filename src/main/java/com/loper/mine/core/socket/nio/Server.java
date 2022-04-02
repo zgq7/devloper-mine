@@ -1,4 +1,4 @@
-package com.loper.mine.utils.socket.nio;
+package com.loper.mine.core.socket.nio;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class Server extends Base {
     private final static Logger logger = LoggerFactory.getLogger(Server.class);
 
     private ServerSocketChannel server;
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService = Executors.newFixedThreadPool(500);
     private final Scanner scanner = new Scanner(System.in);
     /**
      * 如果要形成 用户ID：Client 这样的对应关系，还是继承SocketChannel 加属性、封装下比较好
