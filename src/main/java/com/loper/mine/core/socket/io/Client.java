@@ -53,10 +53,11 @@ public class Client extends Base {
     protected void writeListening() {
         executorService.execute(() -> {
             logger.info("控制台写入监听中...");
+            Scanner scanner = new Scanner(System.in);
             while (true) {
                 if (isAvailable()) {
                     try {
-                        String nextLine = new Scanner(System.in).nextLine();
+                        String nextLine = scanner.nextLine();
                         if (isMsgJson(nextLine)) {
                             sendToClient(client, nextLine);
                         }

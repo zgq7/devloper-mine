@@ -28,10 +28,14 @@ import java.io.Reader;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.FileChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -46,11 +50,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -982,5 +988,132 @@ public class NormallTest {
         }
     }
 
+    @Test
+    public void gatherWrite() {
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+        try {
+            File file = new File("src/test/java/com/loper/mine/SQLParserTest.java");
+            inputStream = new FileInputStream(file);
+            inChannel = inputStream.getChannel();
+
+            ByteBuffer buffer1 = ByteBuffer.allocate(8);
+            ByteBuffer buffer2 = ByteBuffer.allocate(15);
+            ByteBuffer[] buffers = new ByteBuffer[]{buffer1, buffer2};
+
+            // 分散读取
+            inChannel.read(buffers);
+            for (ByteBuffer buffer : buffers) {
+                buffer.flip();
+                System.out.println(buffer.mark());
+            }
+
+            File outFile = new File("src/test/java/com/loper/mine/1.txt");
+            outputStream = new FileOutputStream(outFile);
+            outChannel = outputStream.getChannel();
+            // 聚集写入
+            outChannel.write(buffers);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+                if (outputStream != null)
+                    outputStream.close();
+                if (inChannel != null)
+                    inChannel.close();
+                if (outChannel != null)
+                    outChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void send() {
+        DatagramChannel channel = null;
+        try {
+            channel = DatagramChannel.open();
+            // 设置为非阻塞
+            channel.configureBlocking(false);
+
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+                String nextLine = scanner.nextLine();
+                buffer.put(nextLine.getBytes());
+                buffer.flip();
+                channel.send(buffer, new InetSocketAddress("127.0.0.1", 8056));
+                buffer.clear();
+                if ("over".equals(nextLine))
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void receive() {
+        DatagramChannel channel = null;
+        try {
+            channel = DatagramChannel.open();
+            // 设置为非阻塞
+            channel.configureBlocking(false);
+            channel.bind(new InetSocketAddress(8056));
+
+            Selector selector = Selector.open();
+            channel.register(selector, SelectionKey.OP_READ);
+
+            while (true) {
+                int select = selector.select();
+                boolean exit = false;
+
+                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey selectionKey = iterator.next();
+
+                    if (selectionKey.isReadable()) {
+                        ByteBuffer buffer = ByteBuffer.allocate(1024);
+                        channel.receive(buffer);
+                        buffer.flip();
+                        byte[] data = new byte[buffer.limit()];
+                        buffer.get(data);
+                        String str = new String(data);
+                        System.out.println("收到：" + str);
+                        if ("over".equals(str))
+                            exit = true;
+                    }
+                    iterator.remove();
+                }
+                if (exit)
+                    break;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
