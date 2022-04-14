@@ -45,6 +45,8 @@ public class Client extends Base {
                 // 客户端连接成功后才进行控制台写入
                 while (!client.isConnected()) {
                     TimeUnit.SECONDS.sleep(1);
+                    if (!client.isOpen())
+                        break;
                 }
                 while (scanner.hasNextLine()) {
                     String nextLine = scanner.nextLine();
