@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -28,19 +29,31 @@ public class Client extends Base {
     private SocketChannel client;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Scanner scanner = new Scanner(System.in);
+    /**
+     * 是否需要断开连接
+     **/
+    protected volatile boolean disConnect = false;
+
+    public static void main(String[] args) throws IOException {
+        Client client = new Client("127.0.0.1", 8366);
+        client.bindAndRegister();
+        client.listener();
+    }
+
+    public Client(String ip, int port) {
+        super(ip, port);
+    }
 
     @Override
-    public void bindAndRegister(String ip, int port) throws IOException {
+    public void bindAndRegister() throws IOException {
         this.selector = Selector.open();
 
-        SocketChannel client = SocketChannel.open();
-        client.configureBlocking(false);
-        client.connect(new InetSocketAddress(ip, port));
-        client.register(selector, SelectionKey.OP_CONNECT);
-        logger.info("客户端启动成功,ip:{},port:{}", ip, port);
-        this.client = client;
+        connectAndRegister();
+
+        logger.info("客户端启动,ip:{},port:{}", ip, port);
         // 监听控制台写入
         executorService.execute(() -> {
+            Thread.currentThread().setName("console-thread");
             try {
                 // 客户端连接成功后才进行控制台写入
                 while (!client.isConnected()) {
@@ -51,23 +64,40 @@ public class Client extends Base {
                 while (scanner.hasNextLine()) {
                     String nextLine = scanner.nextLine();
                     if (client.isOpen()) {
+                        if (OVER.equals(nextLine)) {
+                            this.terminal();
+                            break;
+                        }
                         //用户已输入，注册写事件，将输入的消息发送给客户端
                         client.register(selector, SelectionKey.OP_WRITE, ByteBuffer.wrap(nextLine.getBytes()));
                         //唤醒之前因为监听OP_READ而阻塞的select()
                         selector.wakeup();
                     }
                 }
+                logger.info("控制台线程结束");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("控制台输入异常：", e);
             }
         });
     }
 
+    /**
+     * 连接并注册
+     **/
+    private void connectAndRegister() throws IOException {
+        this.client = SocketChannel.open();
+        this.client.configureBlocking(false);
+        this.client.connect(new InetSocketAddress(ip, port));
+        this.client.register(selector, SelectionKey.OP_CONNECT);
+    }
+
     @Override
-    public void listener() {
+    public void listener() throws IOException {
         while (true) {
             try {
                 int select = selector.select();
+                if (!selector.isOpen())
+                    break;
                 logger.info("----------------------------------select={}", select);
                 Set<SelectionKey> selectionKeySet = selector.selectedKeys();
                 Iterator<SelectionKey> keyIterable = selectionKeySet.iterator();
@@ -115,25 +145,35 @@ public class Client extends Base {
                 }
             } catch (Exception e) {
                 logger.error("连接异常：", e);
-                break;
+                if (!this.disConnect && (e instanceof ConnectException)) {
+                    logger.info("客户端即将进行重连");
+                    connectAndRegister();
+                } else {
+                    break;
+                }
             }
         }
 
+        terminal();
+    }
+
+    @Override
+    void terminal() throws IOException {
         // 退出步骤
         try {
-            client.close();
-            scanner.close();
-            executorService.shutdown();
-            logger.info("客户端退出连接");
+            if (this.client.isOpen())
+                this.client.close();
+            if (this.selector.isOpen())
+                this.selector.close();
+
+            this.scanner.close();
+            if (!executorService.isTerminated()){
+                executorService.shutdown();
+                logger.info("客户端退出连接");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("客户端退出异常：", e);
+            throw e;
         }
     }
-
-    public static void main(String[] args) throws IOException {
-        Client client = new Client();
-        client.bindAndRegister("127.0.0.1", 8366);
-        client.listener();
-    }
-
 }

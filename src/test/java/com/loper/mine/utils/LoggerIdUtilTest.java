@@ -11,8 +11,8 @@ import java.util.concurrent.*;
  * @date 2021/11/17 17:15
  * @description
  **/
-public class TraceIdUtilTest {
-    private static final Logger logger = LoggerFactory.getLogger(TraceIdUtilTest.class);
+public class LoggerIdUtilTest {
+    private static final Logger logger = LoggerFactory.getLogger(LoggerIdUtilTest.class);
 
     private final static ExecutorService EXECUTOR = new ThreadPoolExecutor(5,
             10,
@@ -23,12 +23,12 @@ public class TraceIdUtilTest {
 
     @Test
     public void test() throws InterruptedException {
-        TraceIdUtil.setTraceId();
+        LoggerIdUtil.random();
         logger.info("主线程");
         int cap = 10;
         CountDownLatch countDownLatch = new CountDownLatch(cap);
 
-        final String traceId = TraceIdUtil.getTraceIdRequiredNonNull();
+        final String traceId = LoggerIdUtil.getCurrentThreadTraceId();
         for (int i = 0; i < cap; i++) {
             EXECUTOR.execute(() -> {
                 //TraceIdUtil.setTraceId(traceId);

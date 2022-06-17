@@ -9,10 +9,13 @@ import com.loper.mine.controller.dto.LoginDto;
 import com.loper.mine.model.Aopi;
 import com.loper.mine.utils.JSRValidatorUtil;
 import com.loper.mine.utils.time.TimeUtils;
+import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.info.GraphLayout;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,6 +39,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -1115,5 +1119,78 @@ public class NormallTest {
             }
         }
     }
+
+
+    @Test
+    public void mark() throws InterruptedException {
+        TimeUnit.SECONDS.sleep(3);
+
+        Bingo bingo = new Bingo();
+        bingo.setP(1);
+        bingo.setB(false);
+        bingo.setBingo(new Bingo());
+        // 查看对象内部结构
+        System.out.println(ClassLayout.parseInstance(bingo).toPrintable());
+        System.out.println("\n++++++++++++++++++++++++++\n");
+        synchronized (bingo) {
+            // 查看对象内部结构
+            System.out.println(ClassLayout.parseInstance(bingo).toPrintable());
+        }
+        // 查看对象内部结构
+        //System.out.println(ClassLayout.parseInstance(bingo).toPrintable());
+        // 查看对象外部信息
+        //System.out.println(GraphLayout.parseInstance(bingo).toPrintable());
+        // 查看对象总大小
+        //System.out.println(GraphLayout.parseInstance(bingo).totalSize());
+    }
+
+    @Test
+    public void mark2() {
+        Bingo[] bingos = new Bingo[1];
+        Bingo bingo = new Bingo();
+        bingo.setP(1);
+        bingo.setB(false);
+        bingos[0] = bingo;
+        // 查看对象内部结构
+        System.out.println(ClassLayout.parseInstance(bingos).toPrintable());
+        // 查看对象外部信息
+        System.out.println(GraphLayout.parseInstance(bingos).toPrintable());
+        // 查看对象总大小
+        System.out.println(GraphLayout.parseInstance(bingos).totalSize());
+    }
+
+
+    private static class Bingo {
+        @Setter
+        private int p;
+        @Setter
+        private boolean b;
+        @Setter
+        private Bingo bingo;
+    }
+
+    @Test
+    public void or() {
+        HashMap<String, Integer> map = new HashMap<>(300);
+        for (int i = 0; i < 300; i++) {
+            map.put("" + i, i);
+        }
+
+        map.put("234", 23);
+
+        System.out.println(map);
+    }
+
+    @Test
+    public void ssssa() {
+        int i = 10;
+        System.out.println(i >>> 1);
+        /*
+         * 10       =    1010
+         * 10 >>> 1 =     101
+         *               1111
+         */
+    }
+
 
 }

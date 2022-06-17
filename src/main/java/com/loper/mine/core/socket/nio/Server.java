@@ -37,37 +37,60 @@ public class Server extends Base {
     private final Map<Long, SocketChannel> clientMap = new ConcurrentHashMap<>();
     private final AtomicLong seq = new AtomicLong(0);
 
+
+    public static void main(String[] args) throws IOException {
+        Server server = new Server("127.0.0.1", 8366);
+        server.bindAndRegister();
+        server.listener();
+    }
+
+    public Server(String ip, int port) {
+        super(ip, port);
+    }
+
     @Override
-    public void bindAndRegister(String ip, int port) throws IOException {
+    public void bindAndRegister() throws IOException {
         selector = Selector.open();
 
-        ServerSocketChannel server = ServerSocketChannel.open();
+        this.server = ServerSocketChannel.open();
         // 设置为非阻塞
         server.configureBlocking(false);
         // 绑定端口
-        server.socket().bind(new InetSocketAddress(ip, port));
+        server.socket().bind(new InetSocketAddress(this.ip, port));
         // 注册到selector上
         server.register(selector, SelectionKey.OP_ACCEPT);
         logger.info("服务端启动成功,ip:{},port:{}", ip, port);
-        this.server = server;
         // 监听控制台写入
         executorService.execute(() -> {
             try {
                 while (scanner.hasNextLine()) {
-                    String[] nextLine = scanner.nextLine().split(",");
-                    if (nextLine.length != 2)
+                    if (!this.server.isOpen())
+                        break;
+                    String nextLine = scanner.nextLine();
+                    if (OVER.equals(nextLine)) {
+                        this.terminal();
+                        break;
+                    }
+                    String[] nextLineArr = scanner.nextLine().split(",");
+                    if (nextLineArr.length != 2)
                         continue;
-                    String clientSeq = nextLine[0];
+                    String clientSeq = nextLineArr[0];
                     if (!StringUtils.isNumeric(clientSeq))
                         continue;
                     SocketChannel client = clientMap.get(Long.valueOf(clientSeq));
                     if (client != null) {
-                        client.register(selector, SelectionKey.OP_WRITE, ByteBuffer.wrap(nextLine[1].getBytes()));
+                        client.register(selector, SelectionKey.OP_WRITE, ByteBuffer.wrap(nextLineArr[1].getBytes()));
+                        /*
+                         * 若 selector 处于 select 阻塞中，
+                         * 此时新 register 一个事件是无法扫描到的，需要 wakeUp 一下阻塞线程，或重新进行 select 操作。
+                         */
                         selector.wakeup();
                     } else {
                         logger.info("客户端：{}不存在", clientSeq);
                     }
                 }
+                this.scanner.close();
+                logger.info("控制台线程结束");
             } catch (Exception e) {
                 logger.error("服务端输入异常：", e);
                 logger.error("服务端输入将不可用");
@@ -76,11 +99,13 @@ public class Server extends Base {
     }
 
     @Override
-    public void listener() {
+    public void listener() throws IOException {
         while (true) {
             try {
                 int select = selector.select();
-                logger.info("----------------------------------");
+                if (!selector.isOpen())
+                    break;
+                logger.info("----------------------------------select={}", select);
                 Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
                 while (keyIterator.hasNext()) {
                     SelectionKey key = keyIterator.next();
@@ -130,11 +155,14 @@ public class Server extends Base {
                                     logger.info("接收到客户端消息：{}", new String(receive, 0, len));
                                     buffer.clear();
                                 }
+                                // socket channel连接断开时会触发一个read为-1的事件
+                                if (len == -1) {
+                                    closeAndRemoveClient(client);
+                                }
                             } catch (IOException e) {
                                 logger.error("接收客户端消息异常：", e);
                                 key.cancel();
-                                client.close();
-                                removeClient(client);
+                                closeAndRemoveClient(client);
                             }
                         }
                     }
@@ -145,18 +173,40 @@ public class Server extends Base {
             }
         }
 
+        terminal();
+    }
+
+    @Override
+    void terminal() throws IOException {
         // 退出步骤
         try {
-            server.close();
-            scanner.close();
-            executorService.shutdown();
-            logger.info("服务端结束");
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (this.server.isOpen())
+                this.server.close();
+            if (this.selector.isOpen())
+                this.selector.close();
+
+            this.scanner.close();
+            if (!this.executorService.isTerminated()) {
+                this.executorService.shutdownNow();
+                logger.info("服务端结束");
+            }
+        } catch (IOException e) {
+            logger.error("客户端退出异常：", e);
+            throw e;
         }
     }
 
-    private void removeClient(SocketChannel client) {
+    /**
+     * 移除客户端
+     **/
+    private void closeAndRemoveClient(SocketChannel client) {
+        if (client.isOpen()) {
+            try {
+                client.close();
+            } catch (IOException ioException) {
+                logger.error("关闭客户端异常：", ioException);
+            }
+        }
         Long seqNo = null;
         for (Map.Entry<Long, SocketChannel> entry : clientMap.entrySet()) {
             if (entry.getValue() == client) {
@@ -166,13 +216,6 @@ public class Server extends Base {
         }
         if (seqNo != null)
             clientMap.remove(seqNo);
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        Server server = new Server();
-        server.bindAndRegister("127.0.0.1", 8366);
-        server.listener();
     }
 
 }

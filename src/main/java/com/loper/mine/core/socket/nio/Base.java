@@ -13,22 +13,40 @@ import java.nio.channels.Selector;
 public abstract class Base {
 
     /**
+     * 表示客户端或服务端退出
+     **/
+    final static String OVER = "over";
+
+    /**
+     * 服务端的ip和端口
+     **/
+    protected String ip;
+    protected int port;
+
+    /**
      * 初始化一个select用于轮询监视
      **/
     protected Selector selector;
 
+    public Base(String ip, int port) {
+        this.ip = ip;
+        this.port = port;
+    }
+
     /**
      * 绑定端口并注册到管道
-     *
-     * @param ip   客户端/服务端 IP
-     * @param port 客户端/服务端 port
      **/
-    abstract void bindAndRegister(String ip, int port) throws IOException;
+    abstract void bindAndRegister() throws IOException;
 
     /**
      * 监听每个key 是否可读、可写 等状态
      **/
     abstract void listener() throws IOException;
+
+    /**
+     * 程序退出
+     **/
+    abstract void terminal() throws IOException;
 
 
 }
