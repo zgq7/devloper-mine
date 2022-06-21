@@ -87,6 +87,7 @@ public class Client extends Base {
     private void connectAndRegister() throws IOException {
         this.client = SocketChannel.open();
         this.client.configureBlocking(false);
+        // 连接服务端（不是真正开始创建连接，要由selector进行事件消费）
         this.client.connect(new InetSocketAddress(ip, port));
         this.client.register(selector, SelectionKey.OP_CONNECT);
     }
@@ -145,7 +146,8 @@ public class Client extends Base {
                 }
             } catch (Exception e) {
                 logger.error("连接异常：", e);
-                if (!this.disConnect && (e instanceof ConnectException)) {
+                //if (!this.disConnect && (e instanceof ConnectException)) {
+                if (!this.disConnect) {
                     logger.info("客户端即将进行重连");
                     connectAndRegister();
                 } else {
@@ -167,7 +169,7 @@ public class Client extends Base {
                 this.selector.close();
 
             this.scanner.close();
-            if (!executorService.isTerminated()){
+            if (!executorService.isTerminated()) {
                 executorService.shutdown();
                 logger.info("客户端退出连接");
             }

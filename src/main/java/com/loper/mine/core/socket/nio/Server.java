@@ -56,10 +56,10 @@ public class Server extends Base {
         // 设置为非阻塞
         server.configureBlocking(false);
         // 绑定端口
-        server.socket().bind(new InetSocketAddress(this.ip, port));
+        server.socket().bind(new InetSocketAddress(this.ip, this.port));
         // 注册到selector上
         server.register(selector, SelectionKey.OP_ACCEPT);
-        logger.info("服务端启动成功,ip:{},port:{}", ip, port);
+        logger.info("服务端启动成功,ip:{},port:{}", this.ip, this.port);
         // 监听控制台写入
         executorService.execute(() -> {
             try {
@@ -216,6 +216,8 @@ public class Server extends Base {
         }
         if (seqNo != null)
             clientMap.remove(seqNo);
+
+        logger.info("客户端卸载成功，序号：{}", seqNo);
     }
 
 }

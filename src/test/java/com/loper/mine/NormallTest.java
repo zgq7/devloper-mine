@@ -39,7 +39,6 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -1190,6 +1189,25 @@ public class NormallTest {
          * 10 >>> 1 =     101
          *               1111
          */
+    }
+
+    @Test
+    public void sort() {
+        Map<String, List<Integer>> map = new HashMap<>();
+        map.put("1", Collections.singletonList(0));
+        map.put("2", Arrays.asList(1, 2, 3));
+        map.put("3", Arrays.asList(1, 2, 3, 4, 5, 6));
+        map.put("4", Collections.singletonList(9));
+
+        List<List<Integer>> sortedList = map.values().stream().sorted(Comparator.comparing(List::size,Comparator.reverseOrder())).collect(Collectors.toList());
+
+//        List<List<Integer>> sortedList = map.values().stream().sorted(((o1, o2) -> {
+//            if (o1.size() == o2.size())
+//                return 0;
+//            return o1.size() > o2.size() ? -1 : 1;
+//        })).collect(Collectors.toList());
+
+        System.out.println(sortedList);
     }
 
 
