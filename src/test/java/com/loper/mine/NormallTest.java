@@ -9,14 +9,36 @@ import com.loper.mine.controller.dto.LoginDto;
 import com.loper.mine.model.Aopi;
 import com.loper.mine.utils.JSRValidatorUtil;
 import com.loper.mine.utils.time.TimeUtils;
+import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import sun.net.util.URLUtil;
+import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.info.GraphLayout;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -25,8 +47,29 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
@@ -811,5 +854,361 @@ public class NormallTest {
 //            System.out.println("下一批次");
 //        }
     }
+
+    @Test
+    public void xk() throws ExecutionException, InterruptedException {
+        int a = 200, b = 6;
+        // 或运算
+        System.out.println(100 | 6);
+        // 与运算
+        System.out.println(100 & 6);
+        // 异或运算
+        System.out.println(100 ^ 6);
+
+        System.out.println(100 / 6);
+
+        CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
+            throw new RuntimeException();
+        });
+
+        future.get();
+    }
+
+    @Test
+    public void getChar() {
+        String dst = "hello ";
+        String src = "world";
+        char[] value = Arrays.copyOf(dst.toCharArray(), 11);
+        System.out.println(value);
+        src.getChars(0, src.length(), value, dst.length());
+        System.out.println(value);
+
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.put("1".getBytes());
+        buffer.get();
+        buffer.put("2".getBytes());
+    }
+
+    @Test
+    public void ioRead() {
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(new File("src/test/java/com/loper/mine/SQLParserTest.java"));
+            byte[] receive = new byte[8];
+            // IO 流读文件的时候不会管 byte 中的数据是否已被处理过，下一次读取直接覆盖
+            while (fileInputStream.read(receive) > 0) {
+                System.out.println(new String(receive));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileInputStream != null)
+                    fileInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void bufferRead() {
+        int capacity = 8;
+        FileInputStream fileInputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        try {
+            fileInputStream = new FileInputStream(new File("src/test/java/com/loper/mine/SQLParserTest.java"));
+            inputStreamReader = new InputStreamReader(fileInputStream);
+            bufferedReader = new BufferedReader(inputStreamReader, capacity);
+
+            CharBuffer receive = CharBuffer.allocate(capacity);
+            char[] data = new char[capacity];
+            // buffer reader 在读取数据的时候会判断buffer 中的数据是否已被清理
+            while (bufferedReader.read(receive) > 0) {
+                receive.flip();
+                receive.get(data);
+                receive.flip();
+                System.out.println(new String(data));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bufferedReader != null)
+                    bufferedReader.close();
+                if (inputStreamReader != null)
+                    inputStreamReader.close();
+                if (fileInputStream != null)
+                    fileInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void mapFile() {
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+        try {
+            File file = new File("src/test/java/com/loper/mine/SQLParserTest.java");
+            inputStream = new FileInputStream(file);
+
+            inChannel = inputStream.getChannel();
+
+            // map 不会进行数据拷贝，会在物理内存开辟一块文件映射区域，只占用物理内存。
+            //MappedByteBuffer buffer = inputStream.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+            //ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+
+            ByteBuffer buffer = ByteBuffer.allocate(8);
+            // read 会进行数据拷贝，会占用用户内存空间。
+            inChannel.read(buffer);
+            buffer.flip();
+            System.out.println(buffer.mark());
+
+            File outFile = new File("src/test/java/com/loper/mine/1.txt");
+            outputStream = new FileOutputStream(outFile);
+            outChannel = outputStream.getChannel();
+            outChannel.write(buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+                if (outputStream != null)
+                    outputStream.close();
+                if (inChannel != null)
+                    inChannel.close();
+                if (outChannel != null)
+                    outChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void gatherWrite() {
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+        try {
+            File file = new File("src/test/java/com/loper/mine/SQLParserTest.java");
+            inputStream = new FileInputStream(file);
+            inChannel = inputStream.getChannel();
+
+            ByteBuffer buffer1 = ByteBuffer.allocate(8);
+            ByteBuffer buffer2 = ByteBuffer.allocate(15);
+            ByteBuffer[] buffers = new ByteBuffer[]{buffer1, buffer2};
+
+            // 分散读取
+            inChannel.read(buffers);
+            for (ByteBuffer buffer : buffers) {
+                buffer.flip();
+                System.out.println(buffer.mark());
+            }
+
+            File outFile = new File("src/test/java/com/loper/mine/1.txt");
+            outputStream = new FileOutputStream(outFile);
+            outChannel = outputStream.getChannel();
+            // 聚集写入
+            outChannel.write(buffers);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+                if (outputStream != null)
+                    outputStream.close();
+                if (inChannel != null)
+                    inChannel.close();
+                if (outChannel != null)
+                    outChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void send() {
+        DatagramChannel channel = null;
+        try {
+            channel = DatagramChannel.open();
+            // 设置为非阻塞
+            channel.configureBlocking(false);
+
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+                String nextLine = scanner.nextLine();
+                buffer.put(nextLine.getBytes());
+                buffer.flip();
+                channel.send(buffer, new InetSocketAddress("127.0.0.1", 8056));
+                buffer.clear();
+                if ("over".equals(nextLine))
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void receive() {
+        DatagramChannel channel = null;
+        try {
+            channel = DatagramChannel.open();
+            // 设置为非阻塞
+            channel.configureBlocking(false);
+            channel.bind(new InetSocketAddress(8056));
+
+            Selector selector = Selector.open();
+            channel.register(selector, SelectionKey.OP_READ);
+
+            while (true) {
+                int select = selector.select();
+                boolean exit = false;
+
+                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey selectionKey = iterator.next();
+
+                    if (selectionKey.isReadable()) {
+                        ByteBuffer buffer = ByteBuffer.allocate(1024);
+                        channel.receive(buffer);
+                        buffer.flip();
+                        byte[] data = new byte[buffer.limit()];
+                        buffer.get(data);
+                        String str = new String(data);
+                        System.out.println("收到：" + str);
+                        if ("over".equals(str))
+                            exit = true;
+                    }
+                    iterator.remove();
+                }
+                if (exit)
+                    break;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    @Test
+    public void mark() throws InterruptedException {
+        TimeUnit.SECONDS.sleep(3);
+
+        Bingo bingo = new Bingo();
+        bingo.setP(1);
+        bingo.setB(false);
+        bingo.setBingo(new Bingo());
+        // 查看对象内部结构
+        System.out.println(ClassLayout.parseInstance(bingo).toPrintable());
+        System.out.println("\n++++++++++++++++++++++++++\n");
+        synchronized (bingo) {
+            // 查看对象内部结构
+            System.out.println(ClassLayout.parseInstance(bingo).toPrintable());
+        }
+        // 查看对象内部结构
+        //System.out.println(ClassLayout.parseInstance(bingo).toPrintable());
+        // 查看对象外部信息
+        //System.out.println(GraphLayout.parseInstance(bingo).toPrintable());
+        // 查看对象总大小
+        //System.out.println(GraphLayout.parseInstance(bingo).totalSize());
+    }
+
+    @Test
+    public void mark2() {
+        Bingo[] bingos = new Bingo[1];
+        Bingo bingo = new Bingo();
+        bingo.setP(1);
+        bingo.setB(false);
+        bingos[0] = bingo;
+        // 查看对象内部结构
+        System.out.println(ClassLayout.parseInstance(bingos).toPrintable());
+        // 查看对象外部信息
+        System.out.println(GraphLayout.parseInstance(bingos).toPrintable());
+        // 查看对象总大小
+        System.out.println(GraphLayout.parseInstance(bingos).totalSize());
+    }
+
+
+    private static class Bingo {
+        @Setter
+        private int p;
+        @Setter
+        private boolean b;
+        @Setter
+        private Bingo bingo;
+    }
+
+    @Test
+    public void or() {
+        HashMap<String, Integer> map = new HashMap<>(300);
+        for (int i = 0; i < 300; i++) {
+            map.put("" + i, i);
+        }
+
+        map.put("234", 23);
+
+        System.out.println(map);
+    }
+
+    @Test
+    public void ssssa() {
+        int i = 10;
+        System.out.println(i >>> 1);
+        /*
+         * 10       =    1010
+         * 10 >>> 1 =     101
+         *               1111
+         */
+    }
+
+    @Test
+    public void sort() {
+        Map<String, List<Integer>> map = new HashMap<>();
+        map.put("1", Collections.singletonList(0));
+        map.put("2", Arrays.asList(1, 2, 3));
+        map.put("3", Arrays.asList(1, 2, 3, 4, 5, 6));
+        map.put("4", Collections.singletonList(9));
+
+        List<List<Integer>> sortedList = map.values().stream().sorted(Comparator.comparing(List::size,Comparator.reverseOrder())).collect(Collectors.toList());
+
+//        List<List<Integer>> sortedList = map.values().stream().sorted(((o1, o2) -> {
+//            if (o1.size() == o2.size())
+//                return 0;
+//            return o1.size() > o2.size() ? -1 : 1;
+//        })).collect(Collectors.toList());
+
+        System.out.println(sortedList);
+    }
+
 
 }
