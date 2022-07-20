@@ -9,6 +9,8 @@ import com.loper.mine.controller.dto.LoginDto;
 import com.loper.mine.model.Aopi;
 import com.loper.mine.utils.JSRValidatorUtil;
 import com.loper.mine.utils.time.TimeUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +41,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -59,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CompletableFuture;
@@ -69,6 +73,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
@@ -1199,7 +1204,7 @@ public class NormallTest {
         map.put("3", Arrays.asList(1, 2, 3, 4, 5, 6));
         map.put("4", Collections.singletonList(9));
 
-        List<List<Integer>> sortedList = map.values().stream().sorted(Comparator.comparing(List::size,Comparator.reverseOrder())).collect(Collectors.toList());
+        List<List<Integer>> sortedList = map.values().stream().sorted(Comparator.comparing(List::size, Comparator.reverseOrder())).collect(Collectors.toList());
 
 //        List<List<Integer>> sortedList = map.values().stream().sorted(((o1, o2) -> {
 //            if (o1.size() == o2.size())
@@ -1210,5 +1215,121 @@ public class NormallTest {
         System.out.println(sortedList);
     }
 
+    @Test
+    public void selector() throws IOException {
+        Selector selector = Selector.open();
+        for (int i = 0; i < 3; i++) {
+            ServerSocketChannel ssc = ServerSocketChannel.open();
+            ssc.configureBlocking(false);
+            ssc.bind(new InetSocketAddress("127.0.0.1", 8360 + i));
+            ssc.register(selector, SelectionKey.OP_ACCEPT);
+        }
+        System.out.println("over");
+    }
+
+    @Test
+    public void channel() throws IOException {
+        ServerSocketChannel ssc = ServerSocketChannel.open();
+        ssc.configureBlocking(false);
+        ssc.bind(new InetSocketAddress("127.0.0.1", 8366));
+        for (int i = 0; i < 3; i++) {
+            Selector selector = Selector.open();
+            ssc.register(selector, SelectionKey.OP_ACCEPT);
+        }
+        System.out.println("over");
+    }
+
+    @Data
+    @AllArgsConstructor
+    private class FooBean {
+        private int id;
+        private int weight;
+        private int parentID;
+        private int type;
+
+    }
+
+    @Data
+    private class GroupBean {
+        private int type;
+        private int weight;
+        private int parentWeight;
+    }
+
+    @Test
+    public void computeWeight() {
+        int cap = 10000;
+        List<FooBean> fooBeanList = new ArrayList<>(cap);
+//        for (int i = 0; i < cap; i++) {
+//            fooBeanList.add(new FooBean(i, i, RandomUtils.nextInt(0, cap), RandomUtils.nextInt(0, 4)));
+//        }
+        fooBeanList.add(new FooBean(0, 1, 1, 1));
+        fooBeanList.add(new FooBean(1, 2, 0, 2));
+        fooBeanList.add(new FooBean(2, 3, 3, 1));
+        fooBeanList.add(new FooBean(3, 2, 1, 1));
+        fooBeanList.add(new FooBean(4, 3, 3, 2));
+        fooBeanList.add(new FooBean(5, 2, 4, 3));
+        System.out.println(fooBeanList);
+        System.out.println("=====================================");
+
+        // fooBean id : fooBean weight
+        final Map<Integer, Integer> parentMap = fooBeanList.stream().collect(Collectors.toMap(FooBean::getId, FooBean::getWeight));
+
+        final List<GroupBean> groupBeanList = fooBeanList.stream().collect(Collectors.groupingBy(FooBean::getType)).entrySet().stream().map(entry -> {
+            GroupBean groupBean = new GroupBean();
+            groupBean.setType(entry.getKey());
+            System.out.println("type =" + entry.getKey() + "的foo ID");
+            // 这里可以拿到当前type 所有的 foo
+            groupBean.setWeight(entry.getValue().stream().peek(foo -> System.out.println(foo.getId())).mapToInt(FooBean::getWeight).sum());
+            System.out.println("type =" + entry.getKey() + "的foo parentID");
+            groupBean.setParentWeight(entry.getValue().stream().map(FooBean::getParentID).distinct().peek(System.out::println).mapToInt(parentMap::get).sum());
+            return groupBean;
+        }).collect(Collectors.toList());
+
+        System.out.println(groupBeanList);
+    }
+
+    @Test
+    public void queue() throws InterruptedException {
+        SynchronousQueue<Integer> synchronousQueue = new SynchronousQueue<>();
+        new Thread(() -> {
+            try {
+                //TimeUnit.SECONDS.sleep(10);
+                synchronousQueue.put(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        CountDownLatch latch = new CountDownLatch(1);
+        new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(10);
+                System.out.println(synchronousQueue.take());
+                latch.countDown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        latch.await();
+    }
+
+    @Test
+    public void priority() throws InterruptedException {
+        PriorityQueue<Integer> priorityQueue =
+                new PriorityQueue<>(Comparator.comparingInt(Integer::intValue));
+        priorityQueue.add(2);
+        priorityQueue.add(1);
+        priorityQueue.add(3);
+        priorityQueue.add(7);
+        priorityQueue.add(5);
+        priorityQueue.add(10);
+        priorityQueue.add(6);
+
+        int size = priorityQueue.size();
+        for (int i = 0; i < size; i++) {
+            System.out.println(priorityQueue.poll());
+        }
+    }
 
 }
