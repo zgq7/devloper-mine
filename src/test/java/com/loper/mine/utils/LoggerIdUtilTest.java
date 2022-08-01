@@ -28,10 +28,10 @@ public class LoggerIdUtilTest {
         int cap = 10;
         CountDownLatch countDownLatch = new CountDownLatch(cap);
 
-        final String traceId = LoggerIdUtil.getCurrentThreadTraceId();
+        final String traceId = LoggerIdUtil.getCurrentThreadLogId();
         for (int i = 0; i < cap; i++) {
             EXECUTOR.execute(() -> {
-                //TraceIdUtil.setTraceId(traceId);
+                LoggerIdUtil.setLoggerId(traceId);
                 logger.info("子线程");
                 countDownLatch.countDown();
             });

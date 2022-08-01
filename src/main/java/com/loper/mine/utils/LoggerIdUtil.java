@@ -16,21 +16,30 @@ public class LoggerIdUtil {
      * 为当前线程随机生成一个 logger ID
      **/
     public static void random() {
-        MDC.put(LOG_ID, StringUtils.substring(genTraceId(), -MAX_LOG_ID_LENGTH));
+        MDC.put(LOG_ID, StringUtils.substring(genLoggerId(), -MAX_LOG_ID_LENGTH));
+    }
+
+    /**
+     * 为当前线程随机生成一个 logger ID
+     **/
+    public static void setLoggerId(String logId) {
+        if (StringUtils.isBlank(logId) && StringUtils.isBlank(getCurrentThreadLogId()))
+            random();
+        else
+            MDC.put(LOG_ID, StringUtils.substring(logId, -MAX_LOG_ID_LENGTH));
     }
 
     /**
      * 获取当前线程的 logger ID
      **/
-    public static String getCurrentThreadTraceId() {
-        String traceId = MDC.get(LOG_ID);
-        return StringUtils.isBlank(traceId) ? LoggerIdUtil.genTraceId() : traceId;
+    public static String getCurrentThreadLogId() {
+        return MDC.get(LOG_ID);
     }
 
     /**
      * 随机生成一个 logger ID
      **/
-    private static String genTraceId() {
+    private static String genLoggerId() {
         return RandomStringUtils.randomAlphanumeric(MAX_LOG_ID_LENGTH);
     }
 }
