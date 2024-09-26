@@ -4,6 +4,7 @@ import com.loper.mine.model.Aopi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -14,11 +15,11 @@ import tk.mybatis.spring.annotation.MapperScan;
  **/
 @SpringBootApplication(exclude = QuartzAutoConfiguration.class)
 @MapperScan(value = "com.loper.mine.mapper.mappers")
-//@NacosPropertySource(dataId = "devloper-mine", autoRefreshed = true)
-public class DevloperMineApplication {
+@EnableFeignClients
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(DevloperMineApplication.class, args);
+        SpringApplication.run(Application.class, args);
 
     }
 

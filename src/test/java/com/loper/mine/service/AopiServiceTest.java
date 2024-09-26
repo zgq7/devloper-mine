@@ -1,6 +1,6 @@
 package com.loper.mine.service;
 
-import com.loper.mine.DevloperMineApplication;
+import com.loper.mine.Application;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @date 2021/8/31 14:05
  * @description
  **/
-@SpringBootTest(classes = DevloperMineApplication.class)
+@SpringBootTest(classes = Application.class)
 @RunWith(SpringRunner.class)
 @Slf4j
 public class AopiServiceTest {

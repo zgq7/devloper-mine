@@ -3,7 +3,6 @@ package com.loper.mine;
 import com.alibaba.fastjson.JSON;
 import com.loper.mine.config.LocalThreadPool;
 import com.loper.mine.controller.dto.LoginDto;
-import com.loper.mine.controller.dto.TestDto;
 import com.loper.mine.mapper.base.BaseRepositry;
 import com.loper.mine.mapper.mappers.AopiMapper;
 import com.loper.mine.mapper.mappers.PmsTestMapper;
@@ -40,8 +39,8 @@ import java.util.stream.Collectors;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = DevloperMineApplication.class)
-public class DevloperMineApplicationTests {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = Application.class)
+public class ApplicationTests {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

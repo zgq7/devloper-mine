@@ -1,7 +1,7 @@
 package com.loper.mine.boot;
 
 import com.alibaba.fastjson.JSON;
-import com.loper.mine.DevloperMineApplication;
+import com.loper.mine.Application;
 import com.loper.mine.config.LocalThreadPool;
 import com.loper.mine.mapper.base.BaseRepositry;
 import com.loper.mine.mapper.mappers.AopiMapper;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = DevloperMineApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = Application.class)
 //@SpringBootTest
 public class ApplicationTests {
 
